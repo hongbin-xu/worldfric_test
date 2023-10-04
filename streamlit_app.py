@@ -36,9 +36,9 @@ col1, col2 = st.columns(2, gap = "medium")
 with col1:
     with st.container():
         st.subheader("Effect of variables")
-        modelOpt = st.selectbox("select model:",('m1', 'm2'), value = "m1")
+        modelOpt = st.selectbox("select model:",('m1', 'm2'))
         st.write(modelOpt)
-        paraOpt = st.selectbox("select parameter:", ("a", "b", "c", "t0"), value = "a")
+        paraOpt = st.selectbox("select parameter:", ("a", "b", "c", "t0"))
 
         
 
