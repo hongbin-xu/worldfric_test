@@ -12,6 +12,7 @@ def dataLoad(_conn):
     creating 2d array of the height measurement
     """
     data = conn.query('SELECT * from est_per_proj;') 
+    data.replace("#NAME?", np.nan, inplace = True)
     return data
 
 # Pivot information based on the threshold
@@ -37,7 +38,6 @@ with col1:
     with st.container():
         st.subheader("Effect of variables")
         modelOpt = st.selectbox("select model:",('m1', 'm2'))
-        st.write(modelOpt)
         paraOpt = st.selectbox("select parameter:", ("a", "b", "c", "t0"))
 
         
