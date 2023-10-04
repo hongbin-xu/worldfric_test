@@ -12,14 +12,6 @@ def dataLoad(_conn):
     creating 2d array of the height measurement
     """
     data = conn.query('SELECT * from est_per_proj;') 
-    data["a_m1"] = data["a_m1"].astype("float")
-    data["b_m1"] = data["b_m1"].astype("float")
-    data["c_m1"] = data["c_m1"].astype("float")
-
-    data["a_m2"] = data["a_m2"].astype("float")
-    data["b_m2"] = data["b_m2"].astype("float")
-    data["c_m2"] = data["c_m2"].astype("float")
-    data["t0_m2"] = data["t0_m2"].astype("float")
     return data
 
 # Pivot information based on the threshold
