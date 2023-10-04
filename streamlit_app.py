@@ -18,14 +18,14 @@ def dataLoad(_conn):
 # Pivot information based on the threshold
 @st.cache_data
 def dataPivot(data, threshold, para, model):
-    model_data = data.loc[(data[para+"_"+model]!=np.inf)&(data[para+"_"+model]!=(-np.inf))]
+    model_data = data.loc[(data[para+"_"+model].notna())&(data[para+"_"+model].notna())]
     model_data["compare"] = model_data[para+"_"+model]>=threshold #compare with the threshold
     pivot_sum = model_data.groupby(by = ['District_Number', 'District_Name', 'District_Abbr', 'County_Number', 'County_FIPS_Code', 'County_Name', "compare"]).size().reset_index(name = "count") #pivot information based on the threshold    
     return pivot_sum
 
 @st.cache_data
 def distPlot(data, para, model):
-    model_data = data.loc[(data[para+"_"+model]!=np.inf)&(data[para+"_"+model]!=(-np.inf))]
+    model_data = data.loc[(data[para+"_"+model].notna())&(data[para+"_"+model].notna())]
 
 # MySQL connection
 conn = st.experimental_connection("mysql", type="sql")
