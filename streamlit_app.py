@@ -54,7 +54,7 @@ with col2:
     with st.container():
         st.subheader("Geo Distribution")
         varthreshold = st.slider("threshold:",  min_value=None, max_value=None, value=0)
-        pivot_info = dataPivot(data = , threshold = varthreshold, para = paraOpt, model = modelOpt)
+        pivot_info = dataPivot(data = data, threshold = varthreshold, para = paraOpt, model = modelOpt)
         # Extract transverse profile
                 
         # Plot transverse profile
