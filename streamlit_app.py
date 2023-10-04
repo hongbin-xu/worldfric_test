@@ -37,6 +37,7 @@ with col1:
     with st.container():
         st.subheader("Effect of variables")
         modelOpt = st.selectbox("select model:",('m1', 'm2'), value = "m1")
+        st.write(modelOpt)
         paraOpt = st.selectbox("select parameter:", ("a", "b", "c", "t0"), value = "a")
 
         
