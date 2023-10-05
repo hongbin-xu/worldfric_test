@@ -4,3 +4,6 @@ pymysql
 SQLAlchemy
 plotly
 plotly-geo
+geopandas
+pyshp
+shapely
