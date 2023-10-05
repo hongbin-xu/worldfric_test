@@ -48,7 +48,7 @@ def distPlot(data, para, model):
         tavg
         prcp
     """
-    fig1 = px.histogram(data, x=para+"_"+model,  logy = True)
+    fig1 = px.histogram(data, x=para+"_"+model,  log_y = True)
     fig1.update_traces(marker_line_width=1,marker_line_color="black", xbins=dict(start=0.0))
     fig2 = px.box(data, x = "District_Name", y=para+"_"+model, labels = {"y": para})
     fig3 = px.box(data, x = "HIGHWAY_FUN", y=para+"_"+model, labels = {"y": para})
