@@ -101,11 +101,10 @@ with col2:
         st.write(pivot_info)
                 
         # Plot transverse profile
-        fig = px.line(scanData_v1, x="DIST", y="Height", labels = {"DIST": "Transverse Distance (mm)", "Height": "Height (mm}"}, template = "plotly_dark")
-        st.plotly_chart(fig)
+
         fig = px.scatter_geo(locations="Texas",locationmode ="USA-states"# size of markers, "pop" is one of the columns of gapminder
                      )
-        fig.show()
+        st.plotly_chart(fig)
 
     
     
