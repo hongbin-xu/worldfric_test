@@ -28,11 +28,9 @@ def dataPivot(data, threshold, para, model):
 def distPlot(data, para, model):
     model_data = data.loc[(data[para+"_"+model].notna())&(data[para+"_"+model].notna())]
 
-# MySQL connection
+# MySQL connection and load data
 conn = st.experimental_connection("mysql", type="sql")
 data = dataLoad(_conn=conn)
-
-st.write(data)
 
 col1, col2 = st.columns(2, gap = "medium")
 with col1:
