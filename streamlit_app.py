@@ -106,7 +106,7 @@ with col2:
         datAbove = txCounty.merge(pivot_info.loc[pivot_info["compare"], ["County_FIPS_Code", "compare", "count"]], how = "left", on = "County_FIPS_Code")
         dataBelow = txCounty.merge(pivot_info.loc[~pivot_info["compare"], ["County_FIPS_Code", "compare", "count"]], how = "left", on = "County_FIPS_Code")
 
-        fig = px.choropleth(datAbove, geojson=counties, locations='County_FIPS_Code', color='unemp',
+        fig = px.choropleth(datAbove, geojson=counties, locations='County_FIPS_Code', color='count',
                            color_continuous_scale="Viridis",
                            range_color=(0, 12),
                            scope="Texas",
