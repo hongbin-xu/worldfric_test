@@ -36,20 +36,41 @@ def dataPivot(data, threshold, para, model):
     return pivot_sum
 
 
-#@st.cache_data
-def distPlot(data, para, model,col1, col2):
+@st.cache_data
+def distPlot(data, para, model):
+"""
+    histogram
+    DISTRICT
+    HIGHWAY FUN
+    PAVMENT TYPE
+    AADT
+    TRUCK PCT
+    tavg
+    prcp
+"""
+    fig1 = px.histogram(data, x=para+"_"+model, labels = {"x": para})
+    fig2 = px.box(data, x = "District_Abbr" , y=para+"_"+model, labels = {"y": para})
+    fig3 = px.box(data, x = "HIGHWAY_FUN", y=para+"_"+model, labels = {"y": para})
+    fig4 = px.box(data, x = "PAV_TYPE", y=para+"_"+model, labels = {"y": para})
+
+    fig5 = px.histogram(data, x=para+"_"+model, labels = {"y": para})
+    fig6 = px.histogram(data, x=para+"_"+model, labels = {"y": para})
+    fig7 = px.histogram(data, x=para+"_"+model, labels = {"y": para})
+    fig8 = px.histogram(data, x=para+"_"+model, labels = {"y": para})
+
+    col1, col2 = st.columns(2)
     with col1:
-        fig = px.histogram(data, x=para+"_"+model)
-        st.plotly_chart(fig)
-    with col2:
-        fig.add_trace(go.Histogram(x = data[paraOpt+"_"+modelOpt], ids = [paraOpt, "count"]), row =1, col =1)
-    #fig.add_trace(go.Histogram(x = data[paraOpt+"_"+modelOpt]), row =2, col =1)
-    #fig.add_trace(go.Histogram(x = data[paraOpt+"_"+modelOpt]), row =3, col =1)
-    #fig.add_trace(go.Histogram(x = data[paraOpt+"_"+modelOpt]), row =1, col =2)
-    #fig.add_trace(go.Histogram(x = data[paraOpt+"_"+modelOpt]), row =2, col =2)
-    #fig.add_trace(go.Histogram(x = data[paraOpt+"_"+modelOpt]), row =3, col =2)
-    #fig.add_trace(go.Histogram(x = data[paraOpt+"_"+modelOpt]), row =1, col =3)
-        st.plotly_chart(fig)
+        with st.container():
+            st.plotly_chart(fig1)
+            st.plotly_chart(fig2)
+            st.plotly_chart(fig3)
+            st.plotly_chart(fig4)
+    with col1:
+        with st.container():
+           st.plotly_chart(fig5)
+           st.plotly_chart(fig6)
+           st.plotly_chart(fig7)
+           st.plotly_chart(fig8)
 
 # MySQL connection and load data
 conn = st.experimental_connection("mysql", type="sql")
