@@ -9,8 +9,7 @@ st.set_page_config(layout="wide")
 from urllib.request import urlopen
 import json
 from htbuilder import HtmlElement, div, ul, li, br, hr, a, p, img, styles, classes, fonts
-from htbuilder.units import percent
-import htbuilder.units.px as px1
+from htbuilder.units import percent, px1
 from htbuilder.funcs import rgba, rgb
 
 def image(src_as_string, **style):
