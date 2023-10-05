@@ -36,7 +36,7 @@ def dataPivot(data, threshold, para, model):
     return pivot_sum
 
 
-@st.cache_data
+#@st.cache_data
 def distPlot(data, para, model,col1, col2):
     with col1:
         fig = px.htogram(data, x=para+"_"+model, xlabels = para)
