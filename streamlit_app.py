@@ -61,16 +61,16 @@ def distPlot(data, para, model):
     col1, col2 = st.columns(2)
     with col1:
         with st.container():
-            st.plotly_chart(fig1)
-            st.plotly_chart(fig2)
-            st.plotly_chart(fig3)
-            st.plotly_chart(fig4)
+            st.plotly_chart(fig1,use_container_width=True, theme = None)
+            st.plotly_chart(fig2,use_container_width=True, theme = None)
+            st.plotly_chart(fig3,use_container_width=True, theme = None)
+            st.plotly_chart(fig4,use_container_width=True, theme = None)
     with col1:
         with st.container():
-           st.plotly_chart(fig5)
-           st.plotly_chart(fig6)
-           st.plotly_chart(fig7)
-           st.plotly_chart(fig8)
+           st.plotly_chart(fig5,use_container_width=True, theme = None)
+           st.plotly_chart(fig6,use_container_width=True, theme = None)
+           st.plotly_chart(fig7,use_container_width=True, theme = None)
+           st.plotly_chart(fig8,use_container_width=True, theme = None)
 
 # MySQL connection and load data
 conn = st.experimental_connection("mysql", type="sql")
