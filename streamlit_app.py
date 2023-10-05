@@ -17,7 +17,8 @@ def dataLoad(_conn):
     """
     data = conn.query('SELECT * from est_per_proj;') 
     data.replace("#NAME?", np.nan, inplace = True)
-    return data
+    txCounty = conn.query('SELECT * from tx_county_district;') 
+    return data, txCounty
 
 
 # Filter data for different model
@@ -75,7 +76,8 @@ def distPlot(data, para, model):
 
 # MySQL connection and load data
 conn = st.experimental_connection("mysql", type="sql")
-data = dataLoad(_conn=conn)
+data, txCounty = dataLoad(_conn=conn)
+
 
 col1, col2 = st.columns([3,2], gap = "medium")
 with col1:
@@ -98,10 +100,11 @@ with col2:
 
         # pivot information based on the threshold       
         pivot_info = dataPivot(data = data_temp, threshold = varthreshold, para = paraOpt, model = modelOpt)
-        st.write(pivot_info)
+        dataMap = tx_county_district.merge(pivot_info["County_FIPS_Code"], how = "left", on = ["County_FIPS_Code"])
+        st.write(dataMap)
+
                 
         # Plot transverse profile
-
         fig = px.scatter_geo(locations="Texas",locationmode ="USA-states"# size of markers, "pop" is one of the columns of gapminder
                      )
         st.plotly_chart(fig)
