@@ -39,7 +39,7 @@ def dataPivot(data, threshold, para, model):
 #@st.cache_data
 def distPlot(data, para, model,col1, col2):
     with col1:
-        fig = px.htogram(data, x=para+"_"+model, xlabels = para)
+        fig = px.htogram(data, x=para+"_"+model)
         st.plotly_chart(fig)
     with col2:
         fig.add_trace(go.Histogram(x = data[paraOpt+"_"+modelOpt], ids = [paraOpt, "count"]), row =1, col =1)
