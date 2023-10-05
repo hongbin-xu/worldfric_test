@@ -63,11 +63,11 @@ with col1:
         #fig = px.histogram(data_temp, paraOpt +"_"+modelOpt)
         #st.plotly_chart(fig)
         fig = make_subplots(rows =4, cols=2)
-        fig.add_trace(px.histogram(data_temp, paraOpt+"_"+modelOpt), row =1, col =1)
+        fig.add_trace(px.histogram(data_temp, x = paraOpt+"_"+modelOpt), row =1, col =1)
         st.plotly_chart(fig)
 
-        fig = distPlot(data= data_temp, para = paraOpt, model = modelOpt)
-        st.plotly_chart(fig)
+        #fig = distPlot(data= data_temp, para = paraOpt, model = modelOpt)
+        #st.plotly_chart(fig)
 
 
 with col2:
