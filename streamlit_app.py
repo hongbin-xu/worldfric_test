@@ -61,8 +61,8 @@ with col1:
         data_temp = dataFilter(data, model = modelOpt)
 # Histogram, District, HIGHWAY_FUN, PAV_TYPE, AADT, TRUCK_PCT, tavg, prcp
         fig = px.histogram(data_temp, paraOpt +"_"+modelOpt)
-        fig.show()
-        #distPlot(data= data_temp, para = paraOpt, model = modelOpt)
+        st.plotly_chart(fig)
+                #distPlot(data= data_temp, para = paraOpt, model = modelOpt)
 
 
 with col2:
