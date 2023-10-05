@@ -89,7 +89,7 @@ with col1:
         
         data_temp = dataFilter(data, model = modelOpt)
 
-        distPlot(data= data_temp, para = paraOpt, model = modelOpt, col1 = col11, col2 = col12)
+        distPlot(data= data_temp, para = paraOpt, model = modelOpt)
         
 
 with col2:
