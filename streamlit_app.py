@@ -104,10 +104,9 @@ with col2:
         st.write(dataMap)
         
         fig = ff.create_choropleth(
-            fips=dataMap["County_FIPS_Code"], values=dataMap["count"],
+            fips=dataMap["County_FIPS_Code"].tolist(), values=dataMap["count"].tolist(),
             scope=["Texas"], county_outline={'color': 'rgb(255,255,255)', 'width': 0.5},
-            legend_title='Population per county'
-        )
+            legend_title='Population per county')
         fig.update_layout(
             legend_x = 0,
             annotations = {'x': -0.12, 'xanchor': 'left'}
