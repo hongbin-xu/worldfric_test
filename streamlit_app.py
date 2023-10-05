@@ -104,7 +104,7 @@ with col2:
         dataBelow = txCounty.merge(pivot_info.loc[~pivot_info["compare"], ["County_FIPS_Code", "compare", "count"]], how = "left", on = "County_FIPS_Code")
         st.write(datAbove)
         st.write(dataBelow)
-        
+        st.write(datAbove.describe())
         fig = ff.create_choropleth(
             fips=dataMap["County_FIPS_Code"].astype("int").tolist(), values=dataMap["count"].tolist(),
             scope=["Texas"], county_outline={'color': 'rgb(255,255,255)', 'width': 0.5},
