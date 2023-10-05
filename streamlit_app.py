@@ -75,7 +75,7 @@ def distPlot(data, para, model):
 # MySQL connection and load data
 conn = st.experimental_connection("mysql", type="sql")
 data = dataLoad(_conn=conn)
-
+st.write(data.describe())
 col1, col2 = st.columns([3,2], gap = "medium")
 with col1:
     with st.container():
