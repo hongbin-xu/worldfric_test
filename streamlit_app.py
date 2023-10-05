@@ -76,7 +76,6 @@ def distPlot(data, para, model):
 # MySQL connection and load data
 conn = st.experimental_connection("mysql", type="sql")
 data = dataLoad(_conn=conn)
-st.write(data.describe())
 
 col1, col2 = st.columns([3,2], gap = "medium")
 with col1:
@@ -88,7 +87,7 @@ with col1:
             modelOpt = st.selectbox("select model:",('m1', 'm2'))
         with col12:
             paraOpt = st.selectbox("select parameter:", ("a", "b", "c", "t0"))
-        
+
         data_temp = dataFilter(data, model = modelOpt) # Select data for selected model
         distPlot(data= data_temp, para = paraOpt, model = modelOpt) # plot distribution and effect of variables
 
@@ -96,19 +95,18 @@ with col2:
     with st.container():
         st.subheader("Geo Distribution")
         varthreshold = st.slider("threshold:",  min_value=None, max_value=None, value=0)
+
+        # pivot information based on the threshold       
         pivot_info = dataPivot(data = data_temp, threshold = varthreshold, para = paraOpt, model = modelOpt)
         st.write(pivot_info)
-        # Extract transverse profile
                 
         # Plot transverse profile
         fig = px.line(scanData_v1, x="DIST", y="Height", labels = {"DIST": "Transverse Distance (mm)", "Height": "Height (mm}"}, template = "plotly_dark")
         st.plotly_chart(fig)
+        fig = px.scatter_geo(locations="Texas",locationmode ="USA-states"# size of markers, "pop" is one of the columns of gapminder
+                     )
+        fig.show()
 
-        # View and download data
-        st.download_button(label="Download profile", data=scanData_v1.to_csv().encode('utf-8'), file_name="transProfile_seg_" +str(segID)+"_scan_"+str(id_)+".csv", mime = "csv")
-        if st.checkbox('Show raw transverse profile data'):
-            st.write(scanData_v1)
-    
     
     
     
