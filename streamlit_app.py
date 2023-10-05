@@ -106,20 +106,20 @@ with col2:
         datAbove = txCounty.merge(pivot_info.loc[pivot_info["compare"], ["County_FIPS_Code", "compare", "count"]], how = "left", on = "County_FIPS_Code").replace(np.nan,0)
         dataBelow = txCounty.merge(pivot_info.loc[~pivot_info["compare"], ["County_FIPS_Code", "compare", "count"]], how = "left", on = "County_FIPS_Code").replace(np.nan,0)
 
+        st.write("Number of project with "+ paraOpt + " above threshold")
         fig = px.choropleth(datAbove, geojson=counties, locations='County_FIPS_Code', color='count',
                            color_continuous_scale="Viridis",
                            range_color=(0, 12),
-                           scope="usa",
-                           title="Number of project with "+ paraOpt + " above threshold")
+                           scope="usa")
         fig.update_geos(fitbounds="locations")
         fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
         st.plotly_chart(fig)
 
+        st.write("Number of project with "+ paraOpt + " below threshold")
         fig = px.choropleth(dataBelow, geojson=counties, locations='County_FIPS_Code', color='count',
                            color_continuous_scale="Viridis",
                            range_color=(0, 12),
-                           scope="usa",
-                           title="Number of project with "+ paraOpt + " below threshold")
+                           scope="usa")
         fig.update_geos(fitbounds="locations")
         fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
         st.plotly_chart(fig)
