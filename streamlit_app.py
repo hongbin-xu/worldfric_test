@@ -25,7 +25,7 @@ def dataLoad(_conn):
 # Filter data for different model
 @st.cache_data
 def dataFilter(data, model):
-    model_data = data.loc[(data["a_"+model].notna())&(data["a_"+model].notna())&(data["PAV_TYPE"]!="other"].reset_index(drop = True)
+    model_data = data.loc[(data["a_"+model].notna())&(data["a_"+model].notna())&(data["PAV_TYPE"]!="other")].reset_index(drop = True)
     return model_data
 
 
