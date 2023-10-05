@@ -32,7 +32,7 @@ def distPlot(data, para, model):
 conn = st.experimental_connection("mysql", type="sql")
 data = dataLoad(_conn=conn)
 
-col1, col2 = st.columns(2, gap = "medium")
+col1, col2 = st.columns([3,2], gap = "medium")
 with col1:
     with st.container():
         st.subheader("Effect of variables")
