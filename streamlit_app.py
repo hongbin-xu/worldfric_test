@@ -40,7 +40,7 @@ def dataPivot(data, threshold, para, model):
 @st.cache_data
 def distPlot(data, para, model):
     fig = make_subplots(rows =4, cols=2)
-    fig.add_trace(go.Histogram(data[paraOpt+"_"+modelOpt]), row =1, col =1)
+    fig.add_trace(go.Histogram(x = data[paraOpt+"_"+modelOpt]), row =1, col =1)
     return fig
 
 # MySQL connection and load data
