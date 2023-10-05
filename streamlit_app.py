@@ -48,16 +48,16 @@ def distPlot(data, para, model):
         tavg
         prcp
     """
-    fig1 = px.histogram(data, x=para+"_"+model, log_y = True).update_layout(xaxis_title = "a")
+    fig1 = px.histogram(data, x=para+"_"+model, log_y = True).update_layout(xaxis_title = para)
     fig1.update_traces(marker_line_width=1,marker_line_color="black", xbins=dict(start=0.0))
-    fig2 = px.box(data, x = "District_Name", y=para+"_"+model, labels = {"y": para})
-    fig3 = px.box(data, x = "HIGHWAY_FUN", y=para+"_"+model, labels = {"y": para})
-    fig4 = px.box(data, x = "PAV_TYPE", y=para+"_"+model, labels = {"y": para})
+    fig2 = px.box(data, x = "District_Name", y=para+"_"+model).update_layout(yaxis_title = para)
+    fig3 = px.box(data, x = "HIGHWAY_FUN", y=para+"_"+model).update_layout(yaxis_title = para)
+    fig4 = px.box(data, x = "PAV_TYPE", y=para+"_"+model).update_layout(yaxis_title = para)
 
-    fig5 = px.scatter(data, x="AADT", y=para+"_"+model, labels = {"y": para})
-    fig6 = px.scatter(data, x="TRUCK_PCT", y=para+"_"+model, labels = {"y": para})
-    fig7 = px.scatter(data, x="tavg", y=para+"_"+model, labels = {"y": para})
-    fig8 = px.scatter(data, x="prcp",y=para+"_"+model, labels = {"y": para})
+    fig5 = px.scatter(data, x="AADT", y=para+"_"+model).update_layout(yaxis_title = para)
+    fig6 = px.scatter(data, x="TRUCK_PCT", y=para+"_"+model).update_layout(yaxis_title = para)
+    fig7 = px.scatter(data, x="tavg", y=para+"_"+model).update_layout(yaxis_title = para)
+    fig8 = px.scatter(data, x="prcp",y=para+"_"+model).update_layout(yaxis_title = para)
  
     col1, col2 = st.columns(2)
     with col1:
