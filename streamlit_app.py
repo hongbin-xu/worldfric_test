@@ -49,6 +49,7 @@ def distPlot(data, para, model):
         prcp
     """
     fig1 = px.histogram(data, x=para+"_"+model, labels = {"x": para})
+    fig1.update_traces(marker_line_width=1,marker_line_color="black")
     fig2 = px.box(data, x = "District_Name", y=para+"_"+model, labels = {"y": para})
     fig3 = px.box(data, x = "HIGHWAY_FUN", y=para+"_"+model, labels = {"y": para})
     fig4 = px.box(data, x = "PAV_TYPE", y=para+"_"+model, labels = {"y": para})
@@ -61,21 +62,22 @@ def distPlot(data, para, model):
     col1, col2 = st.columns(2)
     with col1:
         with st.container():
-            st.plotly_chart(fig1,use_container_width=True, theme = None)
-            st.plotly_chart(fig2,use_container_width=True, theme = None)
-            st.plotly_chart(fig3,use_container_width=True, theme = None)
-            st.plotly_chart(fig4,use_container_width=True, theme = None)
+            st.plotly_chart(fig1,use_container_width=True)
+            st.plotly_chart(fig2,use_container_width=True)
+            st.plotly_chart(fig3,use_container_width=True)
+            st.plotly_chart(fig4,use_container_width=True)
     with col2:
         with st.container():
-           st.plotly_chart(fig5,use_container_width=True, theme = None)
-           st.plotly_chart(fig6,use_container_width=True, theme = None)
-           st.plotly_chart(fig7,use_container_width=True, theme = None)
-           st.plotly_chart(fig8,use_container_width=True, theme = None)
+            st.plotly_chart(fig5,use_container_width=True)
+            st.plotly_chart(fig6,use_container_width=True)
+            st.plotly_chart(fig7,use_container_width=True)
+            st.plotly_chart(fig8,use_container_width=True)
 
 # MySQL connection and load data
 conn = st.experimental_connection("mysql", type="sql")
 data = dataLoad(_conn=conn)
 st.write(data.describe())
+
 col1, col2 = st.columns([3,2], gap = "medium")
 with col1:
     with st.container():
@@ -87,10 +89,8 @@ with col1:
         with col12:
             paraOpt = st.selectbox("select parameter:", ("a", "b", "c", "t0"))
         
-        data_temp = dataFilter(data, model = modelOpt)
-
-        distPlot(data= data_temp, para = paraOpt, model = modelOpt)
-        
+        data_temp = dataFilter(data, model = modelOpt) # Select data for selected model
+        distPlot(data= data_temp, para = paraOpt, model = modelOpt) # plot distribution and effect of variables
 
 with col2:
     with st.container():
