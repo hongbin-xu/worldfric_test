@@ -109,7 +109,7 @@ with col2:
         fig = px.choropleth(datAbove, geojson=counties, locations='County_FIPS_Code', color='count',
                            color_continuous_scale="Viridis",
                            range_color=(0, 12),
-                           scope="Texas",
+                           scope="usa",
                            labels={'unemp':'unemployment rate'}
                           )
         fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
