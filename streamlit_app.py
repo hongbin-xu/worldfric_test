@@ -9,27 +9,6 @@ st.set_page_config(layout="wide")
 from urllib.request import urlopen
 import json
 
-hide = """
-    <style>
-        #MainMenu {visibility: hidden;}
-        footer {visibility: hidden;}
-        #GithubIcon {visibility: hidden;}
-    </style>
-"""
-st.markdown(hide, unsafe_allow_html=True)
-
-st.markdown(
-    """
-    <style>
-        .css-1jc7ptx, .e1ewe7hr3, .viewerBadge_container__1QSob,
-        .styles_viewerBadge__1yB5_, .viewerBadge_link__1S137,
-        .viewerBadge_text__1JaDK {
-            display: none;
-        }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
 @st.cache_data
 def dataLoad(_conn):
     """
@@ -46,7 +25,7 @@ def dataLoad(_conn):
 # Filter data for different model
 @st.cache_data
 def dataFilter(data, model):
-    model_data = data.loc[(data["a_"+model].notna())&(data["a_"+model].notna())].reset_index(drop = True)
+    model_data = data.loc[(data["a_"+model].notna())&(data["a_"+model].notna())&(data["PAV_TYPE"]!="other"].reset_index(drop = True)
     return model_data
 
 
