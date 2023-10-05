@@ -110,7 +110,7 @@ with col2:
                            color_continuous_scale="Viridis",
                            range_color=(0, 12),
                            scope="usa",
-                           labels={'count':"Number of project with "+ paraOpt + " above threshold"}
+                           labels={'count':"Number of project with "+ paraOpt + " above threshold"})
         fig.update_geos(fitbounds="locations")
         fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
         st.plotly_chart(fig)
@@ -119,8 +119,7 @@ with col2:
                            color_continuous_scale="Viridis",
                            range_color=(0, 12),
                            scope="usa",
-                           labels={'count':"Number of project with "+ paraOpt + " below threshold"}
-                          )
+                           labels={'count':"Number of project with "+ paraOpt + " below threshold"})
         fig.update_geos(fitbounds="locations")
         fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
         st.plotly_chart(fig)
