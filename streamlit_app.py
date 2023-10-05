@@ -112,7 +112,7 @@ with col2:
                            scope="usa",
                            labels={'unemp':'unemployment rate'}
                           )
-        fig.update_geos(fitbounds="locations")
+        fig.update_geos(fitbounds="locations", scope = "Texas")
         fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
         st.plotly_chart(fig)
 
