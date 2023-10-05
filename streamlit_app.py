@@ -111,7 +111,7 @@ with col2:
                            color_continuous_scale="Viridis",
                            range_color=(0, 12),
                            scope="usa",
-                           hover_data = {"County_FIPS_Code": False, "District_Name", "County_Name", "count"})
+                           hover_data = ["District_Name", "County_Name", "count"])
         fig.update_geos(fitbounds="locations")
         fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
         st.plotly_chart(fig)
@@ -121,7 +121,7 @@ with col2:
                            color_continuous_scale="Viridis",
                            range_color=(0, 12),
                            scope="usa",
-                           hover_data = {"County_FIPS_Code": False, "District_Name", "County_Name", "count"})
+                           hover_data = ["District_Name", "County_Name", "count"])
         fig.update_geos(fitbounds="locations")
         fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
         st.plotly_chart(fig)
