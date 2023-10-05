@@ -38,16 +38,16 @@ def dataPivot(data, threshold, para, model):
 
 @st.cache_data
 def distPlot(data, para, model):
-"""
-    histogram
-    DISTRICT
-    HIGHWAY FUN
-    PAVMENT TYPE
-    AADT
-    TRUCK PCT
-    tavg
-    prcp
-"""
+    """
+        histogram
+        DISTRICT
+        HIGHWAY FUN
+        PAVMENT TYPE
+        AADT
+        TRUCK PCT
+        tavg
+        prcp
+    """
     fig1 = px.histogram(data, x=para+"_"+model, labels = {"x": para})
     fig2 = px.box(data, x = "District_Abbr" , y=para+"_"+model, labels = {"y": para})
     fig3 = px.box(data, x = "HIGHWAY_FUN", y=para+"_"+model, labels = {"y": para})
