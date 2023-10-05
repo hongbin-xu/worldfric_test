@@ -100,7 +100,7 @@ with col2:
 
         # pivot information based on the threshold       
         pivot_info = dataPivot(data = data_temp, threshold = varthreshold, para = paraOpt, model = modelOpt)
-        dataMap = tx_county_district.merge(pivot_info[["County_FIPS_Code", "compare", "count"]], how = "left", on = ["County_FIPS_Code"])
+        dataMap = txCounty.merge(pivot_info[["County_FIPS_Code", "compare", "count"]], how = "left", on = "County_FIPS_Code"])
         st.write(dataMap)
 
                 
