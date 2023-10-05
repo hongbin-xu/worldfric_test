@@ -105,9 +105,15 @@ with col2:
         pivot_info = dataPivot(data = data_temp, threshold = varthreshold, para = paraOpt, model = modelOpt)
         datAbove = txCounty.merge(pivot_info.loc[pivot_info["compare"], ["County_FIPS_Code", "compare", "count"]], how = "left", on = "County_FIPS_Code")
         dataBelow = txCounty.merge(pivot_info.loc[~pivot_info["compare"], ["County_FIPS_Code", "compare", "count"]], how = "left", on = "County_FIPS_Code")
-        st.write(datAbove)
-        st.write(datAbove["County_FIPS_Code"].astype("int").tolist())
-        st.write(datAbove.describe())
+
+        fig = px.choropleth(datAbove, geojson=counties, locations='County_FIPS_Code', color='unemp',
+                           color_continuous_scale="Viridis",
+                           range_color=(0, 12),
+                           scope="Texas",
+                           labels={'unemp':'unemployment rate'}
+                          )
+        fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
+        st.plotly_chart(fig)
 
 
     
