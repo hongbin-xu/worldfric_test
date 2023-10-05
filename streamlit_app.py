@@ -9,11 +9,7 @@ st.set_page_config(layout="wide")
 from urllib.request import urlopen
 import json
 
-hide_github_icon = """
-#GithubIcon {
-  visibility: hidden;
-}
-"""
+hide_github_icon = "#MainMenu { visibility: hidden;}"
 st.markdown(hide_github_icon, unsafe_allow_html=True)
 
 @st.cache_data
