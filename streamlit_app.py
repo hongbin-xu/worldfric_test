@@ -105,7 +105,7 @@ with col2:
         
         fig = ff.create_choropleth(
             fips=dataMap["County_FIPS_Code"], values=dataMap["count"],
-            scope="Texas", county_outline={'color': 'rgb(255,255,255)', 'width': 0.5},
+            scope=["Texas"], county_outline={'color': 'rgb(255,255,255)', 'width': 0.5},
             legend_title='Population per county'
         )
         fig.update_layout(
