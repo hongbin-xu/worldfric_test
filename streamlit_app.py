@@ -5,8 +5,9 @@ import numpy as np
 import plotly.express as px
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
-import plotly.figure_factory as ff
 st.set_page_config(layout="wide")
+from urllib.request import urlopen
+import json
 
 @st.cache_data
 def dataLoad(_conn):
@@ -78,6 +79,8 @@ def distPlot(data, para, model):
 conn = st.experimental_connection("mysql", type="sql")
 data, txCounty = dataLoad(_conn=conn)
 
+with urlopen('https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json') as response:
+    counties = json.load(response)
 
 col1, col2 = st.columns([3,2], gap = "medium")
 with col1:
