@@ -96,7 +96,7 @@ with col1:
 with col2:
     with st.container():
         st.subheader("Geo Distribution")
-        varthreshold = st.slider("threshold:",  min_value=None, max_value=None, value=0)
+        varthreshold = st.slider("threshold:",  min_value=data_temp[paraOpt+"_"+modelOpt].min(), max_value=data_temp[paraOpt+"_"+modelOpt].max(), value=data_temp[paraOpt+"_"+modelOpt].min())
 
         # pivot information based on the threshold       
         pivot_info = dataPivot(data = data_temp, threshold = varthreshold, para = paraOpt, model = modelOpt)
@@ -107,7 +107,7 @@ with col2:
         st.write(datAbove.describe())
 
         fig = ff.create_choropleth(
-            fips=dataMap["County_FIPS_Code"].astype("int").tolist(), values=dataMap["count"].tolist(),
+            fips=dataMap["County_FIPS_Code"].astype("float").tolist(), values=dataMap["count"].tolist(),
             scope=["Texas"], county_outline={'color': 'rgb(255,255,255)', 'width': 0.5},
             legend_title='Population per county')
         fig.update_layout(
