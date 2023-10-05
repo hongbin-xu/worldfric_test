@@ -3,6 +3,9 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import plotly.express as px
+from plotly.subplots import make_subplots
+
+
 st.set_page_config(layout="wide")
 
 @st.cache_data
@@ -53,6 +56,7 @@ with col2:
         st.subheader("Geo Distribution")
         varthreshold = st.slider("threshold:",  min_value=None, max_value=None, value=0)
         pivot_info = dataPivot(data = data, threshold = varthreshold, para = paraOpt, model = modelOpt)
+        st.write(pivot_info)
         # Extract transverse profile
                 
         # Plot transverse profile
