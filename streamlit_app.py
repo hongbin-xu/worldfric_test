@@ -9,6 +9,13 @@ st.set_page_config(layout="wide")
 from urllib.request import urlopen
 import json
 
+hide_github_icon = """
+#GithubIcon {
+  visibility: hidden;
+}
+"""
+st.markdown(hide_github_icon, unsafe_allow_html=True)
+
 @st.cache_data
 def dataLoad(_conn):
     """
@@ -109,22 +116,18 @@ with col2:
         st.write("Number of project with "+ paraOpt + " above threshold")
         fig = px.choropleth(datAbove, geojson=counties, locations='County_FIPS_Code', color='count',
                            color_continuous_scale="Viridis",
-                           range_color=(0, 12),
                            scope="usa",
                            hover_data = ["District_Name", "County_Name", "count"])
         fig.update_geos(fitbounds="locations")
-        fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
-        st.plotly_chart(fig)
+        st.plotly_chart(fig,use_container_width=True)
 
         st.write("Number of project with "+ paraOpt + " below threshold")
         fig = px.choropleth(dataBelow, geojson=counties, locations='County_FIPS_Code', color='count',
                            color_continuous_scale="Viridis",
-                           range_color=(0, 12),
                            scope="usa",
                            hover_data = ["District_Name", "County_Name", "count"])
         fig.update_geos(fitbounds="locations")
-        fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
-        st.plotly_chart(fig)
+        st.plotly_chart(fig,use_container_width=True)
 
     
     
