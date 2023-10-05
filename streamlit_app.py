@@ -37,16 +37,19 @@ def dataPivot(data, threshold, para, model):
 
 
 @st.cache_data
-def distPlot(data, para, model):
-    fig = make_subplots(rows =4, cols=2)
-    fig.add_trace(go.Histogram(x = data[paraOpt+"_"+modelOpt], ids = [paraOpt, "count"]), row =1, col =1)
+def distPlot(data, para, model,col1, col2):
+    with col1:
+        fig = px.htogram(data, x=para+"_"+model, xlabels = para)
+        st.plotly_chart(fig)
+    with col2:
+        fig.add_trace(go.Histogram(x = data[paraOpt+"_"+modelOpt], ids = [paraOpt, "count"]), row =1, col =1)
     #fig.add_trace(go.Histogram(x = data[paraOpt+"_"+modelOpt]), row =2, col =1)
     #fig.add_trace(go.Histogram(x = data[paraOpt+"_"+modelOpt]), row =3, col =1)
     #fig.add_trace(go.Histogram(x = data[paraOpt+"_"+modelOpt]), row =1, col =2)
     #fig.add_trace(go.Histogram(x = data[paraOpt+"_"+modelOpt]), row =2, col =2)
     #fig.add_trace(go.Histogram(x = data[paraOpt+"_"+modelOpt]), row =3, col =2)
     #fig.add_trace(go.Histogram(x = data[paraOpt+"_"+modelOpt]), row =1, col =3)
-    st.plotly_chart(fig)
+        st.plotly_chart(fig)
 
 # MySQL connection and load data
 conn = st.experimental_connection("mysql", type="sql")
@@ -65,7 +68,7 @@ with col1:
         
         data_temp = dataFilter(data, model = modelOpt)
 
-        distPlot(data= data_temp, para = paraOpt, model = modelOpt)
+        distPlot(data= data_temp, para = paraOpt, model = modelOpt, col1 = col11, col2 = col12)
         
 
 with col2:
