@@ -110,12 +110,20 @@ with col2:
                            color_continuous_scale="Viridis",
                            range_color=(0, 12),
                            scope="usa",
-                           labels={'unemp':'unemployment rate'}
-                          )
+                           labels={'count':"Number of project with "+ paraOpt + " above threshold"}
         fig.update_geos(fitbounds="locations")
         fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
         st.plotly_chart(fig)
 
+        fig = px.choropleth(dataBelow, geojson=counties, locations='County_FIPS_Code', color='count',
+                           color_continuous_scale="Viridis",
+                           range_color=(0, 12),
+                           scope="usa",
+                           labels={'count':"Number of project with "+ paraOpt + " below threshold"}
+                          )
+        fig.update_geos(fitbounds="locations")
+        fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
+        st.plotly_chart(fig)
 
     
     
