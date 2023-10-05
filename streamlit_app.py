@@ -62,7 +62,7 @@ with col1:
 # Histogram, District, HIGHWAY_FUN, PAV_TYPE, AADT, TRUCK_PCT, tavg, prcp
         fig = px.histogram(data_temp, paraOpt +"_"+modelOpt)
         fig.show()
-        distPlot(data= data_temp, para = paraOpt, model = modelOpt)
+        #distPlot(data= data_temp, para = paraOpt, model = modelOpt)
 
 
 with col2:
