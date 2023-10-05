@@ -100,8 +100,10 @@ with col2:
 
         # pivot information based on the threshold       
         pivot_info = dataPivot(data = data_temp, threshold = varthreshold, para = paraOpt, model = modelOpt)
-        dataMap = txCounty.merge(pivot_info[["County_FIPS_Code", "compare", "count"]], how = "left", on = "County_FIPS_Code")
-        st.write(dataMap)
+        datAbove = txCounty.merge(pivot_info.loc[pivot_info["compare"], ["County_FIPS_Code", "compare", "count"]], how = "left", on = "County_FIPS_Code")
+        dataBelow = txCounty.merge(pivot_info.loc[!pivot_info["compare"], ["County_FIPS_Code", "compare", "count"]], how = "left", on = "County_FIPS_Code")
+        st.write(datAbove)
+        st.write(dataBelow)
         
         fig = ff.create_choropleth(
             fips=dataMap["County_FIPS_Code"].astype("int").tolist(), values=dataMap["count"].tolist(),
