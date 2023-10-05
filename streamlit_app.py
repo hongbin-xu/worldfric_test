@@ -103,8 +103,8 @@ with col2:
 
         # pivot information based on the threshold       
         pivot_info = dataPivot(data = data_temp, threshold = varthreshold, para = paraOpt, model = modelOpt)
-        datAbove = txCounty.merge(pivot_info.loc[pivot_info["compare"], ["County_FIPS_Code", "compare", "count"]], how = "left", on = "County_FIPS_Code")
-        dataBelow = txCounty.merge(pivot_info.loc[~pivot_info["compare"], ["County_FIPS_Code", "compare", "count"]], how = "left", on = "County_FIPS_Code")
+        datAbove = txCounty.merge(pivot_info.loc[pivot_info["compare"], ["County_FIPS_Code", "compare", "count"]], how = "left", on = "County_FIPS_Code").replace(np.nan,0)
+        dataBelow = txCounty.merge(pivot_info.loc[~pivot_info["compare"], ["County_FIPS_Code", "compare", "count"]], how = "left", on = "County_FIPS_Code").replace(np.nan,0)
 
         fig = px.choropleth(datAbove, geojson=counties, locations='County_FIPS_Code', color='count',
                            color_continuous_scale="Viridis",
@@ -112,7 +112,7 @@ with col2:
                            scope="usa",
                            labels={'unemp':'unemployment rate'}
                           )
-        fig.update_geos(fitbounds="locations", scope = "Texas")
+        fig.update_geos(fitbounds="locations")
         fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
         st.plotly_chart(fig)
 
