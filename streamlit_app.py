@@ -40,12 +40,12 @@ def dataPivot(data, threshold, para, model):
 def distPlot(data, para, model):
     fig = make_subplots(rows =4, cols=2)
     fig.add_trace(go.Histogram(x = data[paraOpt+"_"+modelOpt], ids = [paraOpt, "count"]), row =1, col =1)
-    fig.add_trace(go.Histogram(x = data[paraOpt+"_"+modelOpt]), row =2, col =1)
-    fig.add_trace(go.Histogram(x = data[paraOpt+"_"+modelOpt]), row =3, col =1)
-    fig.add_trace(go.Histogram(x = data[paraOpt+"_"+modelOpt]), row =1, col =2)
-    fig.add_trace(go.Histogram(x = data[paraOpt+"_"+modelOpt]), row =2, col =2)
-    fig.add_trace(go.Histogram(x = data[paraOpt+"_"+modelOpt]), row =3, col =2)
-    fig.add_trace(go.Histogram(x = data[paraOpt+"_"+modelOpt]), row =1, col =3)
+    #fig.add_trace(go.Histogram(x = data[paraOpt+"_"+modelOpt]), row =2, col =1)
+    #fig.add_trace(go.Histogram(x = data[paraOpt+"_"+modelOpt]), row =3, col =1)
+    #fig.add_trace(go.Histogram(x = data[paraOpt+"_"+modelOpt]), row =1, col =2)
+    #fig.add_trace(go.Histogram(x = data[paraOpt+"_"+modelOpt]), row =2, col =2)
+    #fig.add_trace(go.Histogram(x = data[paraOpt+"_"+modelOpt]), row =3, col =2)
+    #fig.add_trace(go.Histogram(x = data[paraOpt+"_"+modelOpt]), row =1, col =3)
     st.plotly_chart(fig)
 
 # MySQL connection and load data
