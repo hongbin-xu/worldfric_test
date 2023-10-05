@@ -65,7 +65,7 @@ def distPlot(data, para, model):
             st.plotly_chart(fig2,use_container_width=True, theme = None)
             st.plotly_chart(fig3,use_container_width=True, theme = None)
             st.plotly_chart(fig4,use_container_width=True, theme = None)
-    with col1:
+    with col2:
         with st.container():
            st.plotly_chart(fig5,use_container_width=True, theme = None)
            st.plotly_chart(fig6,use_container_width=True, theme = None)
