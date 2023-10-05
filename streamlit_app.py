@@ -9,8 +9,13 @@ st.set_page_config(layout="wide")
 from urllib.request import urlopen
 import json
 
-hide_github_icon = "#MainMenu { visibility: hidden;}"
-st.markdown(hide_github_icon, unsafe_allow_html=True)
+hide = """
+    <style>
+        #MainMenu {visibility: hidden;}
+        footer {visibility: hidden;}
+    </style>
+"""
+st.markdown(hide, unsafe_allow_html=True)
 
 @st.cache_data
 def dataLoad(_conn):
