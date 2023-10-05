@@ -49,15 +49,15 @@ def distPlot(data, para, model):
         prcp
     """
     fig1 = px.histogram(data, x=para+"_"+model, labels = {"x": para})
-    fig2 = px.box(data, x = "District_Abbr" , y=para+"_"+model, labels = {"y": para})
+    fig2 = px.box(data, x = "District_Name", y=para+"_"+model, labels = {"y": para})
     fig3 = px.box(data, x = "HIGHWAY_FUN", y=para+"_"+model, labels = {"y": para})
     fig4 = px.box(data, x = "PAV_TYPE", y=para+"_"+model, labels = {"y": para})
 
-    fig5 = px.histogram(data, x=para+"_"+model, labels = {"y": para})
-    fig6 = px.histogram(data, x=para+"_"+model, labels = {"y": para})
-    fig7 = px.histogram(data, x=para+"_"+model, labels = {"y": para})
-    fig8 = px.histogram(data, x=para+"_"+model, labels = {"y": para})
-
+    fig5 = px.scatter(data, x="AADT", y=para+"_"+model, labels = {"y": para})
+    fig6 = px.scatter(data, x="TRUCK_PCT", y=para+"_"+model, labels = {"y": para})
+    fig7 = px.scatter(data, x="tavg", y=para+"_"+model, labels = {"y": para})
+    fig8 = px.scatter(data, x="prcp",y=para+"_"+model, labels = {"y": para})
+ 
     col1, col2 = st.columns(2)
     with col1:
         with st.container():
