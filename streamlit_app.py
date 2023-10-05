@@ -5,7 +5,7 @@ import numpy as np
 import plotly.express as px
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
-
+import plotly.figure_factory as ff
 st.set_page_config(layout="wide")
 
 @st.cache_data
@@ -102,11 +102,19 @@ with col2:
         pivot_info = dataPivot(data = data_temp, threshold = varthreshold, para = paraOpt, model = modelOpt)
         dataMap = txCounty.merge(pivot_info[["County_FIPS_Code", "compare", "count"]], how = "left", on = "County_FIPS_Code")
         st.write(dataMap)
+        
+        fig = ff.create_choropleth(
+            fips=dataMap["County_FIPS_Code"], values=dataMap["count"],
+            scope="Texas", county_outline={'color': 'rgb(255,255,255)', 'width': 0.5},
+            legend_title='Population per county'
+        )
+        fig.update_layout(
+            legend_x = 0,
+            annotations = {'x': -0.12, 'xanchor': 'left'}
+        )
 
-                
-        # Plot transverse profile
-        fig = px.scatter_geo(locations="Texas",locationmode ="USA-states"# size of markers, "pop" is one of the columns of gapminder
-                     )
+        fig.layout.template = None
+        
         st.plotly_chart(fig)
 
     
