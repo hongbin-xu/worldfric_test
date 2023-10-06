@@ -12,7 +12,7 @@ st.set_page_config(layout="wide",
                    page_title='Friction Modeling', 
                    menu_items={
                        'Get help': "mailto:hongbinxu@utexas.edu",
-                       'About': "mailto:hongbinxu@utexas.edu",
+                       'About': "Developed and maintained by Hongbin Xu <br> The University of Texas at Austin",
                    })
 
 
