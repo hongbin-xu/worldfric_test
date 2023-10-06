@@ -11,9 +11,8 @@ import json
 st.set_page_config(layout="wide", 
                    page_title='Friction Modeling', 
                    menu_items={
-                       'get_started': None,
-                       'about': None,
-                       'contact': "mailto:hongbinxu@utexas.edu"
+                       'Get help': "mailto:hongbinxu@utexas.edu",
+                       'About': "mailto:hongbinxu@utexas.edu",
                    })
 
 
