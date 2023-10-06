@@ -112,7 +112,7 @@ with col2:
         fig = px.choropleth(datAbove, geojson=counties, locations='County_FIPS_Code', color='count',
                            color_continuous_scale="Viridis",
                            scope="usa",
-                           range_color=(0,),
+                           range_color=(0, datAbove["count"].max()),
                            hover_data = ["District_Name", "County_Name", "count"])
         fig.update_geos(fitbounds="locations")
         st.plotly_chart(fig,use_container_width=True)
@@ -121,7 +121,7 @@ with col2:
         fig = px.choropleth(dataBelow, geojson=counties, locations='County_FIPS_Code', color='count',
                            color_continuous_scale="Viridis",
                            scope="usa",
-                           range_color=(0, ),
+                           range_color=(0, dataBelow["count"].max()),
                            hover_data = ["District_Name", "County_Name", "count"])
         fig.update_geos(fitbounds="locations")
         st.plotly_chart(fig,use_container_width=True)
