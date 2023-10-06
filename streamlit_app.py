@@ -5,9 +5,17 @@ import numpy as np
 import plotly.express as px
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
-st.set_page_config(layout="wide")
 from urllib.request import urlopen
 import json
+
+st.set_page_config(layout="wide", 
+                   page_title='Friction Modeling', 
+                   initial_sidebar_state="collapsed", 
+                   menu_items={
+                       'get_started': None,
+                       'about': None,
+                       'contact': "mailto:hongbinxu@utexas.edu"
+                   })
 
 
 
