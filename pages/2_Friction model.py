@@ -127,7 +127,8 @@ if st.session_state["allow"]:
 
     with st.sidebar:
         modelOpt = st.selectbox("Select model:",('m1', 'm2'))
-        distOpt = st.multiselect("DIST", distr_cont["DISTR"].unique(), distr_cont["DISTR"].unique(), key = False)
+        with st.expander("Choose columns"):
+            distOpt = st.multiselect("DIST", distr_cont["DISTR"].unique(), distr_cont["DISTR"].unique(), key = False)
         st.write(list(distOpt))
         contOpt = st.multiselect("CONT", distr_cont.loc[distr_cont["DISTR"] in modelOpt]["CONT"].values, distr_cont.loc[distr_cont["DISTR"] in modelOpt]["CONT"].values)
         highOpt = st.multiselect("Facility", ("FM", "SH", "US", "IH"),("FM", "SH", "US", "IH"))
