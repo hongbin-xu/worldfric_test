@@ -117,53 +117,57 @@ def distPlot(data, para, model):
             st.plotly_chart(fig7,use_container_width=True)
             st.plotly_chart(fig8,use_container_width=True)
 
-# MySQL connection and load data
-conn = st.experimental_connection("mysql", type="sql")
-data, txCounty = dataLoad(_conn=conn)
+if st.session_state["allow"]:
+    # MySQL connection and load data
+    conn = st.experimental_connection("mysql", type="sql")
+    data, txCounty = dataLoad(_conn=conn)
 
-with urlopen('https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json') as response:
-    counties = json.load(response)
+    with urlopen('https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json') as response:
+        counties = json.load(response)
 
-col1, col2 = st.columns([3,2], gap = "medium")
-with col1:
-    with st.container():
-        st.subheader("Effect of variables")
+    col1, col2 = st.columns([3,2], gap = "medium")
+    with col1:
+        with st.container():
+            st.subheader("Effect of variables")
 
-        col11, col12 = st.columns(2)
-        with col11:
-            modelOpt = st.selectbox("select model:",('m1', 'm2'))
-        with col12:
-            paraOpt = st.selectbox("select parameter:", ("a", "b", "c", "t0"))
+            col11, col12 = st.columns(2)
+            with col11:
+                modelOpt = st.selectbox("select model:",('m1', 'm2'))
+            with col12:
+                paraOpt = st.selectbox("select parameter:", ("a", "b", "c", "t0"))
 
-        data_temp = dataFilter(data, model = modelOpt) # Select data for selected model
-        distPlot(data= data_temp, para = paraOpt, model = modelOpt) # plot distribution and effect of variables
+            data_temp = dataFilter(data, model = modelOpt) # Select data for selected model
+            distPlot(data= data_temp, para = paraOpt, model = modelOpt) # plot distribution and effect of variables
 
-with col2:
-    with st.container():
-        st.subheader("Geo Distribution")
-        varthreshold = st.slider("threshold:",  min_value=data_temp[paraOpt+"_"+modelOpt].min(), max_value=data_temp[paraOpt+"_"+modelOpt].max(), value=data_temp[paraOpt+"_"+modelOpt].min())
+    with col2:
+        with st.container():
+            st.subheader("Geo Distribution")
+            varthreshold = st.slider("threshold:",  min_value=data_temp[paraOpt+"_"+modelOpt].min(), max_value=data_temp[paraOpt+"_"+modelOpt].max(), value=data_temp[paraOpt+"_"+modelOpt].min())
 
-        # pivot information based on the threshold       
-        pivot_info = dataPivot(data = data_temp, threshold = varthreshold, para = paraOpt, model = modelOpt)
-        datAbove = txCounty.merge(pivot_info.loc[pivot_info["compare"], ["County_FIPS_Code", "compare", "count"]], how = "left", on = "County_FIPS_Code").replace(np.nan,0)
-        dataBelow = txCounty.merge(pivot_info.loc[~pivot_info["compare"], ["County_FIPS_Code", "compare", "count"]], how = "left", on = "County_FIPS_Code").replace(np.nan,0)
+            # pivot information based on the threshold       
+            pivot_info = dataPivot(data = data_temp, threshold = varthreshold, para = paraOpt, model = modelOpt)
+            datAbove = txCounty.merge(pivot_info.loc[pivot_info["compare"], ["County_FIPS_Code", "compare", "count"]], how = "left", on = "County_FIPS_Code").replace(np.nan,0)
+            dataBelow = txCounty.merge(pivot_info.loc[~pivot_info["compare"], ["County_FIPS_Code", "compare", "count"]], how = "left", on = "County_FIPS_Code").replace(np.nan,0)
 
-        st.write("Number of project with "+ paraOpt + " above threshold")
-        fig = px.choropleth(datAbove, geojson=counties, locations='County_FIPS_Code', color='count',
-                           color_continuous_scale="Viridis",
-                           scope="usa",
-                           range_color=(0, datAbove["count"].max()),
-                           hover_data = ["District_Name", "County_Name", "count"])
-        fig.update_geos(fitbounds="locations")
-        st.plotly_chart(fig,use_container_width=True)
+            st.write("Number of project with "+ paraOpt + " above threshold")
+            fig = px.choropleth(datAbove, geojson=counties, locations='County_FIPS_Code', color='count',
+                            color_continuous_scale="Viridis",
+                            scope="usa",
+                            range_color=(0, datAbove["count"].max()),
+                            hover_data = ["District_Name", "County_Name", "count"])
+            fig.update_geos(fitbounds="locations")
+            st.plotly_chart(fig,use_container_width=True)
 
-        st.write("Number of project with "+ paraOpt + " below threshold")
-        fig = px.choropleth(dataBelow, geojson=counties, locations='County_FIPS_Code', color='count',
-                           color_continuous_scale="Viridis",
-                           scope="usa",
-                           range_color=(0, dataBelow["count"].max()),
-                           hover_data = ["District_Name", "County_Name", "count"])
-        fig.update_geos(fitbounds="locations")
-        st.plotly_chart(fig,use_container_width=True)
+            st.write("Number of project with "+ paraOpt + " below threshold")
+            fig = px.choropleth(dataBelow, geojson=counties, locations='County_FIPS_Code', color='count',
+                            color_continuous_scale="Viridis",
+                            scope="usa",
+                            range_color=(0, dataBelow["count"].max()),
+                            hover_data = ["District_Name", "County_Name", "count"])
+            fig.update_geos(fitbounds="locations")
+            st.plotly_chart(fig,use_container_width=True)
+else:
+    st.session_state["allow"] = check_password()
+
 
     
