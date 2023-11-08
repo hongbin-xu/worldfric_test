@@ -129,9 +129,9 @@ if st.session_state["allow"]:
         modelOpt = st.selectbox("Select model:",('m1', 'm2'))
         with st.expander("DISTR"):
             distOpt = st.multiselect("DISTR", distr_cont["DISTR"].unique(), distr_cont["DISTR"].unique(), label_visibility="hidden")
-        list(distOpt)
+        st.write(list(distOpt))
         with st.expander("DISTR"):
-            contOpt = st.multiselect("CONT", distr_cont.loc[distr_cont["DISTR"] in modelOpt]["CONT"].values, distr_cont.loc[distr_cont["DISTR"] in modelOpt]["CONT"].values)
+            contOpt = st.multiselect("CONT", distr_cont.loc[distr_cont["DISTR"] in modelOpt]["CONT"].values, distr_cont.loc[distr_cont["DISTR"] in distOpt]["CONT"].values)
         highOpt = st.multiselect("Facility", ("FM", "SH", "US", "IH"),("FM", "SH", "US", "IH"))
         pavOpt = st.multiselect("Pavement", ("AC_Thin", "AC_Thick", "COM", "JCP", "CRCP"), ("AC_Thin", "AC_Thick", "COM", "JCP", "CRCP"))
 
