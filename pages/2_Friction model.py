@@ -128,7 +128,7 @@ if st.session_state["allow"]:
         counties = json.load(response)
 
     with st.sidebar:
-        modelOpt = st.selectbox("Select model:",('m1', 'm2'))
+        modelOpt = st.selectbox("Select model:", 'm1')
         with st.expander("DISTR"):
             distOpt = st.multiselect("DISTR", distr_cont["DISTR"].unique(), 
                                      distr_cont["DISTR"].unique(), label_visibility="hidden")
@@ -139,13 +139,12 @@ if st.session_state["allow"]:
         highOpt = st.multiselect("Facility", ("FM", "SH", "US", "IH"),("FM", "SH", "US", "IH"))
         pavOpt = st.multiselect("Pavement", ("AC_Thin", "AC_Thick", "COM", "JCP", "CRCP"), ("AC_Thin", "AC_Thick", "COM", "JCP", "CRCP"))
         data_v1 = data.loc[data["DISTR"].isin(distOpt)&data["CONT"].isin(contOpt)&data["HIGHWAY_FUN"].isin(highOpt)&data["PAV_TYPE"].isin(pavOpt)]
-
+    st.write(data_v1)
     # plot
     if modelOpt == "m1":
         plotData = pd.melt(data_v1.rename(columns ={"SN_cummin": "observed"}), id_vars="AGE", value_vars=["observed", "pred1"], value_name="SN", var_name = "Compare")
         fig, axs = plt.subplots()
-        sns.boxplot(x = "AGE", y = "SN", data = plotData,
-                    hue = "Compare", ax = axs)
+        sns.boxplot(x = "AGE", y = "SN", data = plotData, hue = "Compare", ax = axs)
         axs.legend()
         st.pyplot(fig)
 
@@ -153,9 +152,7 @@ if st.session_state["allow"]:
         plotData = pd.melt(data_v1.rename(columns ={"SN_cummin": "observed"}), id_vars="AGE", value_vars=["observed", "pred2"], value_name="SN", var_name = "Compare")
 
         fig, axs = plt.subplots()
-        sns.boxplot(x = "AGE", y = "SN", 
-                    data = plotData,
-                    hue = "Compare", ax = axs)
+        sns.boxplot(x = "AGE", y = "SN", data = plotData, hue = "Compare", ax = axs)
         axs.legend()    
         st.pyplot(fig)
 
