@@ -84,7 +84,7 @@ def distPlot(data, para, model):
             st.plotly_chart(fig8,use_container_width=True)
 
 # MySQL connection and load data
-conn = st.experimental_connection("mysql", type="sql")
+conn = st.connection("mysql", type="sql")
 data, txCounty = dataLoad(_conn=conn)
 
 with urlopen('https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json') as response:
