@@ -7,6 +7,8 @@ from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 from urllib.request import urlopen
 import json
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 st.set_page_config(layout="wide", 
                    page_title='Variabele effect', 
@@ -59,7 +61,7 @@ def dataLoad(_conn):
     mode2: select for multiple segment
     creating 2d array of the height measurement
     """
-    data = conn.query('SELECT * from fric;') 
+    data = conn.query('SELECT * from fricPAwh;') 
     distr_cont = conn.query('SELECT * from distr_cont_onlineApp;') 
     return data, distr_cont
 
@@ -128,17 +130,33 @@ if st.session_state["allow"]:
     with st.sidebar:
         modelOpt = st.selectbox("Select model:",('m1', 'm2'))
         with st.expander("DISTR"):
-            distOpt = st.multiselect("DISTR", distr_cont["DISTR"].unique(), distr_cont["DISTR"].unique(), label_visibility="hidden")
-        st.write(list(distOpt))
-        with st.expander("DISTR"):
-            contOpt = st.multiselect("CONT", distr_cont.loc[distr_cont["DISTR"].isin(distOpt)]["CONT"].values, distr_cont.loc[distr_cont["DISTR"].isin(distOpt)]["CONT"].values)
+            distOpt = st.multiselect("DISTR", distr_cont["DISTR"].unique(), 
+                                     distr_cont["DISTR"].unique(), label_visibility="hidden")
+        with st.expander("CONT"):
+            contOpt = st.multiselect("CONT", distr_cont.loc[distr_cont["DISTR"].isin(distOpt)]["CONT"].values, 
+                                     distr_cont.loc[distr_cont["DISTR"].isin(distOpt)]["CONT"].values,
+                                     label_visibility="hidden")
         highOpt = st.multiselect("Facility", ("FM", "SH", "US", "IH"),("FM", "SH", "US", "IH"))
         pavOpt = st.multiselect("Pavement", ("AC_Thin", "AC_Thick", "COM", "JCP", "CRCP"), ("AC_Thin", "AC_Thick", "COM", "JCP", "CRCP"))
+        data_v1 = data.loc[data["DISTR"].isin(distOpt)&data["CONT"].isin(contOpt)&data["HIGHWAY_FUN"].isin(highOpt)&data["PAV_TYPE"].isin(pavOpt)]
 
-       # data_temp = dataFilter(data, model = modelOpt) # Select data for selected model
+    # plot
+    if modelOpt == "m1":
+        fig, axs = plt.subplots()
+        sns.boxplot(x = "AGE", y = "SN", 
+                    data = pd.melt(data_v1.rename(columns ={"SN_cummin": "observed"}), id_vars="AGE", value_vars=["observed", "pred1"], value_name="SN", var_name = "Compare"),
+                    hue = "Compare", ax = axs)
+        axs.legend()
+        st.pyplot(fig)
 
-    # pivot information based on the threshold       
-    
+    if modelOpt == "m2":       
+        fig, axs = plt.subplots()
+        sns.boxplot(x = "AGE", y = "SN", 
+                    data = pd.melt(data_v1.rename(columns ={"SN_cummin": "observed"}), id_vars="AGE", value_vars=["observed", "pred2"], value_name="SN", var_name = "Compare"),
+                    hue = "Compare", ax = axs)
+        axs.legend()    
+        st.pyplot(fig)
+
 else:
     st.session_state["allow"] = check_password()
 
