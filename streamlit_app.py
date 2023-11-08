@@ -15,7 +15,7 @@ st.set_page_config(layout="wide",
                        'About': "Developed and maintained by Hongbin Xu",
                    })
 
-st.sidebar("Main")
+st.sidebar.success("Main")
 
 
 @st.cache_data
