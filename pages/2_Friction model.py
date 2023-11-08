@@ -143,7 +143,7 @@ if st.session_state["allow"]:
     st.write(pd. __version__)
     # plot
     if modelOpt == "m1":
-        plotData = pd.melt(data_v1.rename(columns ={"SN_cummin": "observed"}), id_vars="AGE", value_vars=["observed", "pred1"], value_name="SN", var_name = "Compare")
+        plotData = pd.melt(data_v1.rename(columns ={"SN_cummin": "observed", "SN": "original"}), id_vars="AGE", value_vars=["observed", "pred1"], value_name="SN", var_name = "Compare")
 
         fig, axs = plt.subplots()
         sns.boxplot(x = "AGE", y = "SN", data = plotData, hue = "Compare", ax = axs)
@@ -151,7 +151,7 @@ if st.session_state["allow"]:
         st.pyplot(fig)
 
     if modelOpt == "m2":       
-        plotData = pd.melt(data_v1.rename(columns ={"SN_cummin": "observed"}), id_vars="AGE", value_vars=["observed", "pred2"], value_name="SN", var_name = "Compare")
+        plotData = pd.melt(data_v1.rename(columns ={"SN_cummin": "observed", "SN": "original"}), id_vars="AGE", value_vars=["observed", "pred2"], value_name="SN", var_name = "Compare")
 
         fig, axs = plt.subplots()
         sns.boxplot(x = "AGE", y = "SN", data = plotData, hue = "Compare", ax = axs)
