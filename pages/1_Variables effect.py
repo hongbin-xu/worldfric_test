@@ -15,7 +15,6 @@ st.set_page_config(layout="wide",
                        'About': "Developed and maintained by Hongbin Xu",
                    })
 
-st.sidebar.success("Main")
 
 # Authentication function
 def check_password():
@@ -127,24 +126,24 @@ if st.session_state["allow"]:
     with urlopen('https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json') as response:
         counties = json.load(response)
 
+    with st.sidebar():
+        modelOpt = st.selectbox("select model:",('m1', 'm2'))
+        paraOpt = st.selectbox("select parameter:", ("a", "b", "c", "t0"))
+        data_temp = dataFilter(data, model = modelOpt) # Select data for selected model
+        varthreshold = st.slider("threshold:",  min_value=data_temp[paraOpt+"_"+modelOpt].min(), max_value=data_temp[paraOpt+"_"+modelOpt].max(), value=data_temp[paraOpt+"_"+modelOpt].min())
+
+
     col1, col2 = st.columns([3,2], gap = "medium")
     with col1:
         with st.container():
             st.subheader("Effect of variables")
 
             col11, col12 = st.columns(2)
-            with col11:
-                modelOpt = st.selectbox("select model:",('m1', 'm2'))
-            with col12:
-                paraOpt = st.selectbox("select parameter:", ("a", "b", "c", "t0"))
-
-            data_temp = dataFilter(data, model = modelOpt) # Select data for selected model
             distPlot(data= data_temp, para = paraOpt, model = modelOpt) # plot distribution and effect of variables
 
     with col2:
         with st.container():
             st.subheader("Geo Distribution")
-            varthreshold = st.slider("threshold:",  min_value=data_temp[paraOpt+"_"+modelOpt].min(), max_value=data_temp[paraOpt+"_"+modelOpt].max(), value=data_temp[paraOpt+"_"+modelOpt].min())
 
             # pivot information based on the threshold       
             pivot_info = dataPivot(data = data_temp, threshold = varthreshold, para = paraOpt, model = modelOpt)
