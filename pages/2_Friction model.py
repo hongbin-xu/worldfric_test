@@ -135,7 +135,7 @@ if st.session_state["allow"]:
         highOpt = st.multiselect("Facility", ("FM", "SH", "US", "IH"),("FM", "SH", "US", "IH"))
         pavOpt = st.multiselect("Pavement", ("AC_Thin", "AC_Thick", "COM", "JCP", "CRCP"), ("AC_Thin", "AC_Thick", "COM", "JCP", "CRCP"))
 
-        data_temp = dataFilter(data, model = modelOpt) # Select data for selected model
+       # data_temp = dataFilter(data, model = modelOpt) # Select data for selected model
 
     # pivot information based on the threshold       
     
