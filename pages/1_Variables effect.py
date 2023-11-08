@@ -126,7 +126,7 @@ if st.session_state["allow"]:
     with urlopen('https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json') as response:
         counties = json.load(response)
 
-    with st.sidebar():
+    with st.sidebar:
         modelOpt = st.selectbox("select model:",('m1', 'm2'))
         paraOpt = st.selectbox("select parameter:", ("a", "b", "c", "t0"))
         data_temp = dataFilter(data, model = modelOpt) # Select data for selected model
