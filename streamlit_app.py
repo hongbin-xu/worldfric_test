@@ -118,8 +118,10 @@ def distPlot(data, para, model):
             st.plotly_chart(fig7,use_container_width=True)
             st.plotly_chart(fig8,use_container_width=True)
 
+st.session_state["allow"] = check_password()
+
 # Check authentication
-if check_password():   
+if st.session_state["allow"]: 
     # MySQL connection and load data
     conn = st.connection("mysql", type="sql")
     data, txCounty = dataLoad(_conn=conn)
