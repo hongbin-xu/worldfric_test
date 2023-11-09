@@ -11,7 +11,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 st.set_page_config(layout="wide", 
-                   page_title='Variabele effect', 
+                   page_title='Sensitivity', 
                    menu_items={
                        'Get help': "mailto:hongbinxu@utexas.edu",
                        'About': "Developed and maintained by Hongbin Xu",
@@ -66,98 +66,80 @@ def dataLoad(_conn):
     return data, distr_cont
 
 
-# Filter data for different model
-@st.cache_data
-def dataFilter(data, model):
-    model_data = data.loc[(data["a_"+model].notna())&(data["a_"+model].notna())&(data["PAV_TYPE"]!="other")].reset_index(drop = True)
-    return model_data
+# Performance model I
+def m1(x,data):
+    a = x[0] + x[1]*data["SH"] + x[2]*data["US"]+x[3]*data["IH"]
+    b = x[4] + x[5]*data["AC_Thick"]+x[6]*data["COM"]+x[7]*data["JCP"]+x[8]*data["CRCP"]+ x[9]*data["tavg"]+x[10]*data["prcp"]+x[11]*data["TRUCK_PCT"]
+    c = x[12]+x[13]*data["AADT"]
+    return a+b*np.exp(-c*data["AGE"])
+
+x1 = np.array([7.049209e+00, -2.600203e+00, -8.963720e+00, -1.236767e+01,
+               2.090193e+02,-5.817576e+00, -9.876824e+00, -1.143599e+01, -8.430132e+00, -2.608191e+00, 1.906576e-01, 3.395223e-01,
+               1.083621e-01, -1.374227e-07])
+# a: const  SH US IH 
+# b: const AC_Thick COM JCP CRCP tavg prcp TRUCK_PCT    
+# c: const AADT        
 
 
-# Pivot information based on the threshold
-@st.cache_data
-def dataPivot(data, threshold, para, model):
-    data = data.copy()
-    data["compare"] = data[para+"_"+model]>=threshold #compare with the threshold
-    pivot_sum = data.groupby(by = ['District_Number', 'District_Name', 'District_Abbr', 'County_Number', 'County_FIPS_Code', 'County_Name', "compare"]).size().reset_index(name = "count") #pivot information based on the threshold    
-    return pivot_sum
+# Performance model II    
+def m2(x,data):
+    a = x[0] + x[1]*data["SH"] + x[2]*data["US"]+x[3]*data["IH"]+x[4]*data["TRUCK_PCT"]
+    b = x[5] + x[6]*data["AC_Thick"]+x[7]*data["COM"]+x[8]*data["JCP"]+x[9]*data["CRCP"]+ x[10]*data["tavg"]+x[11]*data["prcp"]
+    c = x[12]+x[13]*data["AADT"]
+    t0 = x[14]
+    return a+b*np.exp(-c*(data["AGE"]-t0))   
+
+x2 = np.array([1.184951e+01, -2.705696e+00, -9.117392e+00, -1.275260e+01, 3.073346e-01,
+               2.116791e+02, -6.001680e+00, -1.025022e+01, -1.183063e+01, -8.687251e+00,-2.709774e+00,1.973484e-01,
+               1.345769e-01,-1.931186e-07,
+               5.967551e-01])
+
+#const SH US IH TRUCK_PCT
+#const AC_Thick COM  JCP CRCP tavg prcp
+#const AADT
+#const
 
 
-@st.cache_data
-def distPlot(data, para, model):
-    """
-        histogram
-        DISTRICT
-        HIGHWAY FUN
-        PAVMENT TYPE
-        AADT
-        TRUCK PCT
-        tavg
-        prcp
-    """
-    fig1 = px.histogram(data, x=para+"_"+model, log_y = True).update_layout(xaxis_title = para)
-    fig1.update_traces(marker_line_width=1,marker_line_color="black", xbins=dict(start=0.0))
-    fig2 = px.box(data, x = "District_Name", y=para+"_"+model).update_layout(yaxis_title = para)
-    fig3 = px.box(data, x = "HIGHWAY_FUN", y=para+"_"+model).update_layout(yaxis_title = para)
-    fig4 = px.box(data, x = "PAV_TYPE", y=para+"_"+model).update_layout(yaxis_title = para)
+try:
+    if st.session_state["allow"]:
+        # MySQL connection and load data
+        conn = st.connection("mysql", type="sql")
+        data, distr_cont = dataLoad(_conn=conn)
 
-    fig5 = px.scatter(data, x="AADT", y=para+"_"+model).update_layout(yaxis_title = para)
-    fig6 = px.scatter(data, x="TRUCK_PCT", y=para+"_"+model).update_layout(yaxis_title = para)
-    fig7 = px.scatter(data, x="tavg", y=para+"_"+model).update_layout(yaxis_title = para)
-    fig8 = px.scatter(data, x="prcp",y=para+"_"+model).update_layout(yaxis_title = para)
- 
-    col1, col2 = st.columns(2)
-    with col1:
-        with st.container():
-            st.plotly_chart(fig1,use_container_width=True)
-            st.plotly_chart(fig2,use_container_width=True)
-            st.plotly_chart(fig3,use_container_width=True)
-            st.plotly_chart(fig4,use_container_width=True)
-    with col2:
-        with st.container():
-            st.plotly_chart(fig5,use_container_width=True)
-            st.plotly_chart(fig6,use_container_width=True)
-            st.plotly_chart(fig7,use_container_width=True)
-            st.plotly_chart(fig8,use_container_width=True)
+        with st.sidebar:
+            modelOpt = st.selectbox("Select model:", ('m1', 'm2'))
+            with st.expander("DISTR"):
+                distOpt = st.multiselect("DISTR", distr_cont["DISTR"].unique(), 
+                                        distr_cont["DISTR"].unique(), label_visibility="hidden")
+            with st.expander("CONT"):
+                contOpt = st.multiselect("CONT", distr_cont.loc[distr_cont["DISTR"].isin(distOpt)]["CONT"].values, 
+                                        distr_cont.loc[distr_cont["DISTR"].isin(distOpt)]["CONT"].values,
+                                        label_visibility="hidden")
+            highOpt = st.multiselect("Facility", ("FM", "SH", "US", "IH"),("FM", "SH", "US", "IH"))
+            pavOpt = st.multiselect("Pavement", ("AC_Thin", "AC_Thick", "COM", "JCP", "CRCP"), ("AC_Thin", "AC_Thick", "COM", "JCP", "CRCP"))
+            data_v1 = data.loc[data["DISTR"].isin(distOpt)&data["CONT"].isin(contOpt)&data["HIGHWAY_FUN"].isin(highOpt)&data["PAV_TYPE"].isin(pavOpt)]
 
-if st.session_state["allow"]:
-    # MySQL connection and load data
-    conn = st.connection("mysql", type="sql")
-    data, distr_cont = dataLoad(_conn=conn)
+        # plot
+        if modelOpt == "m1":
+            plotData = pd.melt(data_v1.rename(columns ={"SN_cummin": "observed", "SN": "original"}), id_vars="AGE", value_vars=["observed", "pred1"], value_name="SN", var_name = "Compare")
 
-    with urlopen('https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json') as response:
-        counties = json.load(response)
+            fig, axs = plt.subplots()
+            sns.boxplot(x = "AGE", y = "SN", data = plotData, hue = "Compare", ax = axs)
+            axs.legend()
+            st.pyplot(fig)
 
-    with st.sidebar:
-        modelOpt = st.selectbox("Select model:", ('m1', 'm2'))
-        with st.expander("DISTR"):
-            distOpt = st.multiselect("DISTR", distr_cont["DISTR"].unique(), 
-                                     distr_cont["DISTR"].unique(), label_visibility="hidden")
-        with st.expander("CONT"):
-            contOpt = st.multiselect("CONT", distr_cont.loc[distr_cont["DISTR"].isin(distOpt)]["CONT"].values, 
-                                     distr_cont.loc[distr_cont["DISTR"].isin(distOpt)]["CONT"].values,
-                                     label_visibility="hidden")
-        highOpt = st.multiselect("Facility", ("FM", "SH", "US", "IH"),("FM", "SH", "US", "IH"))
-        pavOpt = st.multiselect("Pavement", ("AC_Thin", "AC_Thick", "COM", "JCP", "CRCP"), ("AC_Thin", "AC_Thick", "COM", "JCP", "CRCP"))
-        data_v1 = data.loc[data["DISTR"].isin(distOpt)&data["CONT"].isin(contOpt)&data["HIGHWAY_FUN"].isin(highOpt)&data["PAV_TYPE"].isin(pavOpt)]
+        if modelOpt == "m2":       
+            plotData = pd.melt(data_v1.rename(columns ={"SN_cummin": "observed", "SN": "original"}), id_vars="AGE", value_vars=["observed", "pred2"], value_name="SN", var_name = "Compare")
 
-    # plot
-    if modelOpt == "m1":
-        plotData = pd.melt(data_v1.rename(columns ={"SN_cummin": "observed", "SN": "original"}), id_vars="AGE", value_vars=["observed", "pred1"], value_name="SN", var_name = "Compare")
+            fig, axs = plt.subplots()
+            sns.boxplot(x = "AGE", y = "SN", data = plotData, hue = "Compare", ax = axs)
+            axs.legend()    
+            st.pyplot(fig)
 
-        fig, axs = plt.subplots()
-        sns.boxplot(x = "AGE", y = "SN", data = plotData, hue = "Compare", ax = axs)
-        axs.legend()
-        st.pyplot(fig)
-
-    if modelOpt == "m2":       
-        plotData = pd.melt(data_v1.rename(columns ={"SN_cummin": "observed", "SN": "original"}), id_vars="AGE", value_vars=["observed", "pred2"], value_name="SN", var_name = "Compare")
-
-        fig, axs = plt.subplots()
-        sns.boxplot(x = "AGE", y = "SN", data = plotData, hue = "Compare", ax = axs)
-        axs.legend()    
-        st.pyplot(fig)
-
-else:
+    else:
+        st.write("Login to view the app")
+        st.session_state["allow"] = check_password()
+except:
+    st.write("Login to view the app")
     st.session_state["allow"] = check_password()
 
-        
