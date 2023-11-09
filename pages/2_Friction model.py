@@ -11,7 +11,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 st.set_page_config(layout="wide", 
-                   page_title='Variabele effect', 
+                   page_title='Friction model', 
                    menu_items={
                        'Get help': "mailto:hongbinxu@utexas.edu",
                        'About': "Developed and maintained by Hongbin Xu",
@@ -119,45 +119,46 @@ def distPlot(data, para, model):
             st.plotly_chart(fig7,use_container_width=True)
             st.plotly_chart(fig8,use_container_width=True)
 
-if st.session_state["allow"]:
-    # MySQL connection and load data
-    conn = st.connection("mysql", type="sql")
-    data, distr_cont = dataLoad(_conn=conn)
+try:
+    if st.session_state["allow"]:
+        # MySQL connection and load data
+        conn = st.connection("mysql", type="sql")
+        data, distr_cont = dataLoad(_conn=conn)
 
-    with urlopen('https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json') as response:
-        counties = json.load(response)
+        with st.sidebar:
+            modelOpt = st.selectbox("Select model:", ('m1', 'm2'))
+            with st.expander("DISTR"):
+                distOpt = st.multiselect("DISTR", distr_cont["DISTR"].unique(), 
+                                        distr_cont["DISTR"].unique(), label_visibility="hidden")
+            with st.expander("CONT"):
+                contOpt = st.multiselect("CONT", distr_cont.loc[distr_cont["DISTR"].isin(distOpt)]["CONT"].values, 
+                                        distr_cont.loc[distr_cont["DISTR"].isin(distOpt)]["CONT"].values,
+                                        label_visibility="hidden")
+            highOpt = st.multiselect("Facility", ("FM", "SH", "US", "IH"),("FM", "SH", "US", "IH"))
+            pavOpt = st.multiselect("Pavement", ("AC_Thin", "AC_Thick", "COM", "JCP", "CRCP"), ("AC_Thin", "AC_Thick", "COM", "JCP", "CRCP"))
+            data_v1 = data.loc[data["DISTR"].isin(distOpt)&data["CONT"].isin(contOpt)&data["HIGHWAY_FUN"].isin(highOpt)&data["PAV_TYPE"].isin(pavOpt)]
 
-    with st.sidebar:
-        modelOpt = st.selectbox("Select model:", ('m1', 'm2'))
-        with st.expander("DISTR"):
-            distOpt = st.multiselect("DISTR", distr_cont["DISTR"].unique(), 
-                                     distr_cont["DISTR"].unique(), label_visibility="hidden")
-        with st.expander("CONT"):
-            contOpt = st.multiselect("CONT", distr_cont.loc[distr_cont["DISTR"].isin(distOpt)]["CONT"].values, 
-                                     distr_cont.loc[distr_cont["DISTR"].isin(distOpt)]["CONT"].values,
-                                     label_visibility="hidden")
-        highOpt = st.multiselect("Facility", ("FM", "SH", "US", "IH"),("FM", "SH", "US", "IH"))
-        pavOpt = st.multiselect("Pavement", ("AC_Thin", "AC_Thick", "COM", "JCP", "CRCP"), ("AC_Thin", "AC_Thick", "COM", "JCP", "CRCP"))
-        data_v1 = data.loc[data["DISTR"].isin(distOpt)&data["CONT"].isin(contOpt)&data["HIGHWAY_FUN"].isin(highOpt)&data["PAV_TYPE"].isin(pavOpt)]
+        # plot
+        if modelOpt == "m1":
+            plotData = pd.melt(data_v1.rename(columns ={"SN_cummin": "observed", "SN": "original"}), id_vars="AGE", value_vars=["observed", "pred1"], value_name="SN", var_name = "Compare")
 
-    # plot
-    if modelOpt == "m1":
-        plotData = pd.melt(data_v1.rename(columns ={"SN_cummin": "observed", "SN": "original"}), id_vars="AGE", value_vars=["observed", "pred1"], value_name="SN", var_name = "Compare")
+            fig, axs = plt.subplots()
+            sns.boxplot(x = "AGE", y = "SN", data = plotData, hue = "Compare", ax = axs)
+            axs.legend()
+            st.pyplot(fig)
 
-        fig, axs = plt.subplots()
-        sns.boxplot(x = "AGE", y = "SN", data = plotData, hue = "Compare", ax = axs)
-        axs.legend()
-        st.pyplot(fig)
+        if modelOpt == "m2":       
+            plotData = pd.melt(data_v1.rename(columns ={"SN_cummin": "observed", "SN": "original"}), id_vars="AGE", value_vars=["observed", "pred2"], value_name="SN", var_name = "Compare")
 
-    if modelOpt == "m2":       
-        plotData = pd.melt(data_v1.rename(columns ={"SN_cummin": "observed", "SN": "original"}), id_vars="AGE", value_vars=["observed", "pred2"], value_name="SN", var_name = "Compare")
+            fig, axs = plt.subplots()
+            sns.boxplot(x = "AGE", y = "SN", data = plotData, hue = "Compare", ax = axs)
+            axs.legend()    
+            st.pyplot(fig)
 
-        fig, axs = plt.subplots()
-        sns.boxplot(x = "AGE", y = "SN", data = plotData, hue = "Compare", ax = axs)
-        axs.legend()    
-        st.pyplot(fig)
-
-else:
+    else:
+        st.write("Login to view the app")
+        st.session_state["allow"] = check_password()
+except:
+    st.write("Login to view the app")
     st.session_state["allow"] = check_password()
-
         
