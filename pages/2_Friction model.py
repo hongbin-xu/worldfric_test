@@ -142,15 +142,12 @@ try:
         if modelOpt == "m1":
             plotData = pd.melt(data_v1.rename(columns ={"SN_cummin": "observed", "SN": "original"}), id_vars="AGE", value_vars=["observed", "pred1"], value_name="SN", var_name = "pred vs. obs")
             fig= px.box(plotData, x = "AGE", y = "SN", color= "pred vs. obs") 
-            st.plotly_chart(fig)
+            st.plotly_chart(fig,use_container_width=True)
 
         if modelOpt == "m2":       
             plotData = pd.melt(data_v1.rename(columns ={"SN_cummin": "observed", "SN": "original"}), id_vars="AGE", value_vars=["observed", "pred2"], value_name="SN", var_name = "pred vs. obs")
-
-            fig, axs = plt.subplots()
-            sns.boxplot(x = "AGE", y = "SN", data = plotData, hue = "Compare", ax = axs)
-            axs.legend()    
-            st.pyplot(fig)
+            fig= px.box(plotData, x = "AGE", y = "SN", color= "pred vs. obs") 
+            st.plotly_chart(fig,use_container_width=True)
 
     else:
         st.write("Login to view the app")
