@@ -78,8 +78,7 @@ x1 = np.array([7.049209e+00, -2.600203e+00, -8.963720e+00, -1.236767e+01,
                1.083621e-01, -1.374227e-07])
 # a: const  SH US IH 
 # b: const AC_Thick COM JCP CRCP tavg prcp TRUCK_PCT    
-# c: const AADT        
-
+# c: const AADT
 
 # Performance model II    
 def m2(x,data):
@@ -99,43 +98,89 @@ x2 = np.array([1.184951e+01, -2.705696e+00, -9.117392e+00, -1.275260e+01, 3.0733
 #const AADT
 #const
 
-
 try:
     if st.session_state["allow"]:
-        # MySQL connection and load data
-        conn = st.connection("mysql", type="sql")
-        data, distr_cont = dataLoad(_conn=conn)
+
+        plotData = pd.DataFrame({"AGE": np.repeat(range(11),21), 
+                                 "PAV_TYPE": (["AC_Thin", "AC_Thick", "COM", "JCP", "CRCP"]+["AC_Thick"]*16)*11, 
+                                 "HIGHWAY_FUN": (["FM"]*5+ ["FM", "SH", "US", "IH"]+ ["FM"]*12)*11, 
+                                 "AADT": ([5000]*9+[2000, 5000, 15000]+[5000]*9)*11, 
+                                 "TRUCK_PCT": ([15]*12+ [10, 15, 25]+[15]*6)*11, 
+                                 "tavg": ([67]*15+ [56, 67, 72]+[67]*3)*11, 
+                                 "prcp":([35]*18+[33,35,45])*11, 
+                                 "tag": (["PAV_TYPE"]*5 + ["HIGHWAY_FUN"]*4+["AADT"]*3+["TRUCK_PCT"]*3+["tavg"]*3+["prcp"]*3)*11}).sort_values(by = ["tag", "AGE"])
+        
+        plotData_v1 = pd.get_dummies(plotData[["PAV_TYPE", "HIGHWAY_FUN"]]).rename({'PAV_TYPE_AC_Thick': "AC_Thick", 
+                                                                                    'PAV_TYPE_AC_Thin':"AC_Thin",
+                                                                                    'PAV_TYPE_COM': "COM",
+                                                                                    'PAV_TYPE_CRCP':"CRCP",
+                                                                                    'PAV_TYPE_JCP':"JCP", 
+                                                                                    'HIGHWAY_FUN_FM':"FM", 
+                                                                                    'HIGHWAY_FUN_IH':"IH",
+                                                                                    'HIGHWAY_FUN_SH':"SH", 
+                                                                                    'HIGHWAY_FUN_US':"US"})
+        plotData = pd.concat([plotData, plotData_v1], axis= 1)
 
         with st.sidebar:
             modelOpt = st.selectbox("Select model:", ('m1', 'm2'))
-            with st.expander("DISTR"):
-                distOpt = st.multiselect("DISTR", distr_cont["DISTR"].unique(), 
-                                        distr_cont["DISTR"].unique(), label_visibility="hidden")
-            with st.expander("CONT"):
-                contOpt = st.multiselect("CONT", distr_cont.loc[distr_cont["DISTR"].isin(distOpt)]["CONT"].values, 
-                                        distr_cont.loc[distr_cont["DISTR"].isin(distOpt)]["CONT"].values,
-                                        label_visibility="hidden")
-            highOpt = st.multiselect("Facility", ("FM", "SH", "US", "IH"),("FM", "SH", "US", "IH"))
-            pavOpt = st.multiselect("Pavement", ("AC_Thin", "AC_Thick", "COM", "JCP", "CRCP"), ("AC_Thin", "AC_Thick", "COM", "JCP", "CRCP"))
-            data_v1 = data.loc[data["DISTR"].isin(distOpt)&data["CONT"].isin(contOpt)&data["HIGHWAY_FUN"].isin(highOpt)&data["PAV_TYPE"].isin(pavOpt)]
+            # plot
+            if modelOpt == "m1":
+                plotData["SN"] = m1(x1, plotData)
+            if modelOpt == "m2":       
+                plotData["SN"] = m2(x2, plotData)
 
-        # plot
-        if modelOpt == "m1":
-            plotData = pd.melt(data_v1.rename(columns ={"SN_cummin": "observed", "SN": "original"}), id_vars="AGE", value_vars=["observed", "pred1"], value_name="SN", var_name = "Compare")
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            with st.container():
+                st.write("Pavement Type")
+                fig = px.line(plotData.loc[plotData["tag"] == "PAV_TYPE"], 
+                              x = "AGE", 
+                              y = "SN", 
+                              color= "PAV_TYPE")
+                st.plotly_chart(fig,use_container_width=True)
 
-            fig, axs = plt.subplots()
-            sns.boxplot(x = "AGE", y = "SN", data = plotData, hue = "Compare", ax = axs)
-            axs.legend()
-            st.pyplot(fig)
+            with st.container():
+                st.write("Facility Type")
+                fig = px.line(plotData.loc[plotData["tag"] == "HIGHWAY_FUN"], 
+                              x = "AGE", 
+                              y = "SN", 
+                              color= "HIGHWAY_FUN")
+                st.plotly_chart(fig,use_container_width=True)
 
-        if modelOpt == "m2":       
-            plotData = pd.melt(data_v1.rename(columns ={"SN_cummin": "observed", "SN": "original"}), id_vars="AGE", value_vars=["observed", "pred2"], value_name="SN", var_name = "Compare")
+        with col2:
+            with st.container():
+                st.write("AADT")
+                fig = px.line(plotData.loc[plotData["tag"] == "AADT"], 
+                              x = "AGE", 
+                              y = "SN", 
+                              color= "AADT")
+                st.plotly_chart(fig,use_container_width=True)
 
-            fig, axs = plt.subplots()
-            sns.boxplot(x = "AGE", y = "SN", data = plotData, hue = "Compare", ax = axs)
-            axs.legend()    
-            st.pyplot(fig)
 
+            with st.container():
+                st.write("Truck Percentage")
+                fig = px.line(plotData.loc[plotData["tag"] == "TRUCK_PCT"], 
+                              x = "AGE", 
+                              y = "SN", 
+                              color= "TRUCK_PCT")
+                st.plotly_chart(fig,use_container_width=True)
+
+        with col3:
+            with st.container():
+                st.write("tavg")
+                fig = px.line(plotData.loc[plotData["tag"] == "tavg"], 
+                              x = "AGE", 
+                              y = "SN", 
+                              color= "tavg")
+                st.plotly_chart(fig,use_container_width=True)
+
+            with st.container():
+                st.write("Precipitation")
+                fig = px.line(plotData.loc[plotData["tag"] == "prcp"], 
+                              x = "AGE", 
+                              y = "SN", 
+                              color= "prcp")
+                st.plotly_chart(fig,use_container_width=True)
     else:
         st.write("Login to view the app")
         st.session_state["allow"] = check_password()
