@@ -109,14 +109,14 @@ except:
     st.write("Login to view the app")
     st.session_state["allow"] = check_password()
 
-plotData = pd.DataFrame({"AGE": np.repeat(range(11),21), 
-                            "PAV_TYPE": (["AC_Thin", "AC_Thick", "COM", "JCP", "CRCP"]+["AC_Thick"]*16)*11, 
-                            "HIGHWAY_FUN": (["FM"]*5+ ["FM", "SH", "US", "IH"]+ ["FM"]*12)*11, 
-                            "AADT": ([5000]*9+[2000, 5000, 15000]+[5000]*9)*11, 
-                            "TRUCK_PCT": ([15]*12+ [10, 15, 25]+[15]*6)*11, 
-                            "tavg": ([67]*15+ [56, 67, 72]+[67]*3)*11, 
-                            "prcp":([35]*18+[33,35,45])*11, 
-                            "tag": (["PAV_TYPE"]*5 + ["HIGHWAY_FUN"]*4+["AADT"]*3+["TRUCK_PCT"]*3+["tavg"]*3+["prcp"]*3)*11}).sort_values(by = ["tag", "AGE"])
+plotData = pd.DataFrame({"AGE": np.repeat(np.arange(0, 10, 0.5),21), 
+                            "PAV_TYPE": (["AC_Thin", "AC_Thick", "COM", "JCP", "CRCP"]+["AC_Thick"]*16)*20, 
+                            "HIGHWAY_FUN": (["FM"]*5+ ["FM", "SH", "US", "IH"]+ ["FM"]*12)*20, 
+                            "AADT": ([5000]*9+[2000, 5000, 15000]+[5000]*9)*20, 
+                            "TRUCK_PCT": ([15]*12+ [10, 15, 25]+[15]*6)*20, 
+                            "tavg": ([67]*15+ [56, 67, 72]+[67]*3)*20, 
+                            "prcp":([35]*18+[33,35,45])*20, 
+                            "tag": (["PAV_TYPE"]*5 + ["HIGHWAY_FUN"]*4+["AADT"]*3+["TRUCK_PCT"]*3+["tavg"]*3+["prcp"]*3)*20}).sort_values(by = ["tag", "AGE"])
 
 plotData_v1 = pd.get_dummies(plotData[["PAV_TYPE", "HIGHWAY_FUN"]]).rename(columns={'PAV_TYPE_AC_Thick': "AC_Thick", 
                                                                                     'PAV_TYPE_AC_Thin':"AC_Thin",
@@ -145,6 +145,7 @@ with col1:
                         x = "AGE", 
                         y = "SN", 
                         color= "PAV_TYPE")
+        fig.update_layout(yaxis_range=[0,80])
         st.plotly_chart(fig,use_container_width=True)
 
     with st.container():
@@ -153,6 +154,7 @@ with col1:
                         x = "AGE", 
                         y = "SN", 
                         color= "HIGHWAY_FUN")
+        fig.update_layout(yaxis_range=[0,80])
         st.plotly_chart(fig,use_container_width=True)
 
 with col2:
@@ -162,6 +164,7 @@ with col2:
                         x = "AGE", 
                         y = "SN", 
                         color= "AADT")
+        fig.update_layout(yaxis_range=[0,80])        
         st.plotly_chart(fig,use_container_width=True)
 
 
@@ -171,6 +174,7 @@ with col2:
                         x = "AGE", 
                         y = "SN", 
                         color= "TRUCK_PCT")
+        fig.update_layout(yaxis_range=[0,80])        
         st.plotly_chart(fig,use_container_width=True)
 
 with col3:
@@ -180,6 +184,8 @@ with col3:
                         x = "AGE", 
                         y = "SN", 
                         color= "tavg")
+        fig.update_layout(yaxis_range=[0,80])
+        
         st.plotly_chart(fig,use_container_width=True)
 
     with st.container():
@@ -188,4 +194,6 @@ with col3:
                         x = "AGE", 
                         y = "SN", 
                         color= "prcp")
+        fig.update_layout(yaxis_range=[0,80])
+        
         st.plotly_chart(fig,use_container_width=True)
