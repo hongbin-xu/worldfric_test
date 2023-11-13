@@ -118,15 +118,15 @@ plotData = pd.DataFrame({"AGE": np.repeat(range(11),21),
                             "prcp":([35]*18+[33,35,45])*11, 
                             "tag": (["PAV_TYPE"]*5 + ["HIGHWAY_FUN"]*4+["AADT"]*3+["TRUCK_PCT"]*3+["tavg"]*3+["prcp"]*3)*11}).sort_values(by = ["tag", "AGE"])
 
-plotData_v1 = pd.get_dummies(plotData[["PAV_TYPE", "HIGHWAY_FUN"]]).rename({'PAV_TYPE_AC_Thick': "AC_Thick", 
-                                                                            'PAV_TYPE_AC_Thin':"AC_Thin",
-                                                                            'PAV_TYPE_COM': "COM",
-                                                                            'PAV_TYPE_CRCP':"CRCP",
-                                                                            'PAV_TYPE_JCP':"JCP", 
-                                                                            'HIGHWAY_FUN_FM':"FM", 
-                                                                            'HIGHWAY_FUN_IH':"IH",
-                                                                            'HIGHWAY_FUN_SH':"SH", 
-                                                                            'HIGHWAY_FUN_US':"US"})
+plotData_v1 = pd.get_dummies(plotData[["PAV_TYPE", "HIGHWAY_FUN"]]).rename(columns={'PAV_TYPE_AC_Thick': "AC_Thick", 
+                                                                                    'PAV_TYPE_AC_Thin':"AC_Thin",
+                                                                                    'PAV_TYPE_COM': "COM",
+                                                                                    'PAV_TYPE_CRCP':"CRCP",
+                                                                                    'PAV_TYPE_JCP':"JCP", 
+                                                                                    'HIGHWAY_FUN_FM':"FM", 
+                                                                                    'HIGHWAY_FUN_IH':"IH",
+                                                                                    'HIGHWAY_FUN_SH':"SH", 
+                                                                                    'HIGHWAY_FUN_US':"US"})
 plotData = pd.concat([plotData, plotData_v1], axis= 1)
 
 with st.sidebar:
