@@ -101,7 +101,8 @@ x2 = np.array([1.184951e+01, -2.705696e+00, -9.117392e+00, -1.275260e+01, 3.0733
 try:
     if st.session_state["allow"]:
 
-        st.write("success")
+        st.write("This section investigates the effect of different variables on the model prediction.")
+
         plotData = pd.DataFrame({"AGE": np.repeat(np.arange(0, 10, 0.5),21), 
                                     "PAV_TYPE": (["AC_Thin", "AC_Thick", "COM", "JCP", "CRCP"]+["AC_Thick"]*16)*20, 
                                     "HIGHWAY_FUN": (["FM"]*5+ ["FM", "SH", "US", "IH"]+ ["FM"]*12)*20, 
