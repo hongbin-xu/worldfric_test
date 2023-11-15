@@ -153,12 +153,11 @@ try:
         col1, col2 = st.colummns(2)
         with col1:
             st.write("m1")
-
         
         with col2:
             st.write("m1")
     else:
-        st.write("Login to view the app")
+        st.write("Invalid login information")
         st.session_state["allow"] = check_password()
 except:
     st.write("Login to view the app")
