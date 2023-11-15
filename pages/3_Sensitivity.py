@@ -73,12 +73,6 @@ def m1(x,data):
     c = x[12]+x[13]*data["AADT"]
     return a+b*np.exp(-c*data["AGE"])
 
-x1 = np.array([7.049209e+00, -2.600203e+00, -8.963720e+00, -1.236767e+01,
-               2.090193e+02,-5.817576e+00, -9.876824e+00, -1.143599e+01, -8.430132e+00, -2.608191e+00, 1.906576e-01, 3.395223e-01,
-               1.083621e-01, -1.374227e-07])
-# a: const  SH US IH 
-# b: const AC_Thick COM JCP CRCP tavg prcp TRUCK_PCT    
-# c: const AADT
 
 # Performance model II    
 def m2(x,data):
@@ -88,15 +82,54 @@ def m2(x,data):
     t0 = x[14]
     return a+b*np.exp(-c*(data["AGE"]-t0))   
 
-x2 = np.array([1.184951e+01, -2.705696e+00, -9.117392e+00, -1.275260e+01, 3.073346e-01,
-               2.116791e+02, -6.001680e+00, -1.025022e+01, -1.183063e+01, -8.687251e+00,-2.709774e+00,1.973484e-01,
-               1.345769e-01,-1.931186e-07,
-               5.967551e-01])
+# a: const  SH US IH 
+# b: const AC_Thick COM JCP CRCP tavg prcp TRUCK_PCT    
+# c: const AADT
 
 #const SH US IH TRUCK_PCT
 #const AC_Thick COM  JCP CRCP tavg prcp
 #const AADT
 #const
+
+def m1_v1(x,data):
+    a = x[0] 
+    b = x[1] + x[2]*data["AC_Thick"]+x[3]*data["COM"]+x[4]*data["JCP"]+x[5]*data["CRCP"]+ x[6]*data["tavg"]+x[7]*data["prcp"]+x[8]*data["TRUCK_PCT"]
+    c = x[9]+x[10]*data["AADT"]
+    return a+b*np.exp(-c*data["AGE"])
+# a: const
+# b: const AC_Thick COM JCP CRCP tavg prcp TRUCK_PCT    
+# c: const AADT
+
+def m2_v1(x,data):
+    a = x[0] +x[1]*data["TRUCK_PCT"]
+    b = x[2] + x[3]*data["AC_Thick"]+x[4]*data["COM"]+x[5]*data["JCP"]+x[6]*data["CRCP"]+ x[7]*data["tavg"]+x[8]*data["prcp"]
+    c = x[9]+x[10]*data["AADT"]
+    t0 = x[11]
+    return a+b*np.exp(-c*(data["AGE"]-t0))   
+
+#const TRUCK_PCT
+#const AC_Thick COM  JCP CRCP tavg prcp
+#const AADT
+#const
+
+
+x = {"stepwise":{"m1":np.array([7.049209e+00, -2.600203e+00, -8.963720e+00, -1.236767e+01,
+                                2.090193e+02,-5.817576e+00, -9.876824e+00, -1.143599e+01, -8.430132e+00, -2.608191e+00, 1.906576e-01, 3.395223e-01,
+                                1.083621e-01, -1.374227e-07]),
+                 "m2":np.array([1.184951e+01, -2.705696e+00, -9.117392e+00, -1.275260e+01, 3.073346e-01,
+                                2.116791e+02, -6.001680e+00, -1.025022e+01, -1.183063e+01, -8.687251e+00,-2.709774e+00,1.973484e-01,
+                                1.345769e-01,-1.931186e-07,
+                                5.967551e-01])},
+     "step_iter":{"m1":np.array([7.049209e+00, -2.600203e+00, -8.963720e+00, -1.236767e+01,
+                                2.090193e+02,-5.817576e+00, -9.876824e+00, -1.143599e+01, -8.430132e+00, -2.608191e+00, 1.906576e-01, 3.395223e-01,
+                                1.083621e-01, -1.374227e-07]), #1
+                  "m2":np.array([1.904065e+01, -2.780562e+00,-9.224207e+00,-1.299706e+01,3.126058e-01, 
+                                 1.975575e+02,-5.801182e+00,-9.939388e+00,-1.147162e+01,-8.420724e+00,-2.633975e+00,1.929804e-01,
+                                 1.491272e-01,-3.103310e-08,
+                                 3.117803e-01])},           #34
+     "remove_facility":{"m1":np.array([21.838598,244.464013,-10.340636,-17.486844,-22.654649,-14.556765,-3.339557,0.280081,-0.005669,0.179864,0.000003]), #4
+                        "m2":np.array([15.455118,0.008352,216.724455,-9.174424,-15.323157,-19.658794,-12.895752,-2.870935,0.243233,0.124019,0.000002,0.276063])}} #2
+
 
 try:
     if st.session_state["allow"]:
@@ -124,12 +157,19 @@ try:
         plotData = pd.concat([plotData, plotData_v1], axis= 1)
 
         with st.sidebar:
+            methodOpt = st.selectbox("Select approach:", ["stepwise", "step_iter", "remove_facility"])
             modelOpt = st.selectbox("Select model:", ('m1', 'm2'))
             # plot
-            if modelOpt == "m1":
-                plotData["SN"] = m1(x1, plotData)
-            if modelOpt == "m2":       
-                plotData["SN"] = m2(x2, plotData)
+            if methodOpt =="remove_facility":
+                if modelOpt == "m1":
+                    plotData["SN"] = m1(x[methodOpt][modelOpt], plotData)
+                if modelOpt == "m2":       
+                    plotData["SN"] = m2(x[methodOpt][modelOpt], plotData)
+            else:
+                if modelOpt == "m1":
+                    plotData["SN"] = m1_v1(x[methodOpt][modelOpt], plotData)
+                if modelOpt == "m2":       
+                    plotData["SN"] = m2_v1(x[methodOpt][modelOpt], plotData)
 
         col1, col2, col3 = st.columns(3)
         with col1:
