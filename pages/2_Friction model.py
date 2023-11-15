@@ -154,8 +154,8 @@ try:
         with col2:
             st.write("m2")
 
-        st.write(data.columns)
-
+        st.write("next row")
+        col1, col2 = st.columns(2)
         with col1:
             st.write("m1")
         with col2:
