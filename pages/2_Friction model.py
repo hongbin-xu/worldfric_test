@@ -150,7 +150,7 @@ try:
             data_v1 = data.loc[data["DISTR"].isin(distOpt)&data["CONT"].isin(contOpt)&data["HIGHWAY_FUN"].isin(highOpt)&data["PAV_TYPE"].isin(pavOpt)]
 
         st.write(data.columns)
-        col1, col2 = st.colummns(2)
+
 
     else:
         st.write("Invalid login information")
