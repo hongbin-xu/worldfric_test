@@ -151,11 +151,7 @@ try:
 
         st.write(data.columns)
         col1, col2 = st.colummns(2)
-        with col1:
-            st.write("m1")
-        
-        with col2:
-            st.write("m1")
+
     else:
         st.write("Invalid login information")
         st.session_state["allow"] = check_password()
