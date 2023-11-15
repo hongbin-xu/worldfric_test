@@ -149,7 +149,7 @@ try:
             pavOpt = st.multiselect("Pavement", ("AC_Thin", "AC_Thick", "COM", "JCP", "CRCP"), ("AC_Thin", "AC_Thick", "COM", "JCP", "CRCP"))
             data_v1 = data.loc[data["DISTR"].isin(distOpt)&data["CONT"].isin(contOpt)&data["HIGHWAY_FUN"].isin(highOpt)&data["PAV_TYPE"].isin(pavOpt)]
 
-        col1, col2 = st.colummns()
+        col1, col2 = st.colummns(2)
         with col1:
             st.write("m1")
         if modelOpt == "m1":
