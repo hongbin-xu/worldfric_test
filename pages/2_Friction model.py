@@ -135,7 +135,6 @@ try:
         # MySQL connection and load data
         conn = st.connection("mysql", type="sql")
         data, distr_cont = dataLoad(_conn=conn)
-        st.write(data["AGE"].describe())
         with st.sidebar:
             #modelOpt = st.selectbox("Select model:", ('m1', 'm2'))
             with st.expander("DISTR"):
@@ -148,7 +147,7 @@ try:
             highOpt = st.multiselect("Facility", ("FM", "SH", "US", "IH"),("FM", "SH", "US", "IH"))
             pavOpt = st.multiselect("Pavement", ("AC_Thin", "AC_Thick", "COM", "JCP", "CRCP"), ("AC_Thin", "AC_Thick", "COM", "JCP", "CRCP"))
             data_v1 = data.loc[data["DISTR"].isin(distOpt)&data["CONT"].isin(contOpt)&data["HIGHWAY_FUN"].isin(highOpt)&data["PAV_TYPE"].isin(pavOpt)]
-
+        st.write(data_v1["AGE"].describe())
         st.subheader("Stepwise with iteration")
         data_v1["pred1"] = m1(x["stepwise"]["m1"], data_v1)
         data_v1["pred2"] = m2(x["stepwise"]["m2"], data_v1)
