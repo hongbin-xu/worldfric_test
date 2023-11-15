@@ -135,7 +135,7 @@ try:
         # MySQL connection and load data
         conn = st.connection("mysql", type="sql")
         data, distr_cont = dataLoad(_conn=conn)
-
+        st.write(data["AGE"].describe())
         with st.sidebar:
             #modelOpt = st.selectbox("Select model:", ('m1', 'm2'))
             with st.expander("DISTR"):
