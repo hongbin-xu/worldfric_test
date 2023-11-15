@@ -112,7 +112,9 @@ def m2_v1(x,data):
 #const AADT
 #const
 
-
+x1 = np.array([7.049209e+00, -2.600203e+00, -8.963720e+00, -1.236767e+01,
+                                2.090193e+02,-5.817576e+00, -9.876824e+00, -1.143599e+01, -8.430132e+00, -2.608191e+00, 1.906576e-01, 3.395223e-01,
+                                1.083621e-01, -1.374227e-07])
 x = {"stepwise":{"m1":np.array([7.049209e+00, -2.600203e+00, -8.963720e+00, -1.236767e+01,
                                 2.090193e+02,-5.817576e+00, -9.876824e+00, -1.143599e+01, -8.430132e+00, -2.608191e+00, 1.906576e-01, 3.395223e-01,
                                 1.083621e-01, -1.374227e-07]),
@@ -160,7 +162,7 @@ try:
             methodOpt = st.selectbox("Select approach:", ["stepwise", "step_iter", "remove_facility"])
             modelOpt = st.selectbox("Select model:", ('m1', 'm2'))
             # plot
-            if methodOpt =="remove_facility":
+            if methodOpt !="remove_facility":
                 if modelOpt == "m1":
                     plotData["SN"] = m1(x[methodOpt][modelOpt], plotData)
                 if modelOpt == "m2":       
@@ -172,6 +174,7 @@ try:
                     plotData["SN"] = m2_v1(x[methodOpt][modelOpt], plotData)
         st.write(plotData)
         col1, col2, col3 = st.columns(3)
+
         with col1:
             with st.container():
                 st.write("Pavement Type")
