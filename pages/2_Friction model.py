@@ -153,11 +153,11 @@ try:
         col1, col2 = st.colummns(2)
         with col1:
             st.write("m1")
-            if modelOpt == "m1":
-                st.write("m2")
-                #plotData = pd.melt(data_v1.rename(columns ={"SN_cummin": "observed", "SN": "original"}), id_vars="AGE", value_vars=["observed", "pred1"], value_name="SN", var_name = "pred vs. obs")
-                #fig= px.box(plotData, x = "AGE", y = "SN", color= "pred vs. obs") 
-                #st.plotly_chart(fig,use_container_width=True, theme= None)
+        if modelOpt == "m1":
+            st.write("m2")
+            #plotData = pd.melt(data_v1.rename(columns ={"SN_cummin": "observed", "SN": "original"}), id_vars="AGE", value_vars=["observed", "pred1"], value_name="SN", var_name = "pred vs. obs")
+            #fig= px.box(plotData, x = "AGE", y = "SN", color= "pred vs. obs") 
+            #st.plotly_chart(fig,use_container_width=True, theme= None)
 
         if modelOpt == "m2":       
             st.write("m2")
@@ -166,7 +166,7 @@ try:
             #fig= px.box(plotData, x = "AGE", y = "SN", color= "pred vs. obs") 
             #st.plotly_chart(fig,use_container_width=True, theme= None)
         
-        with col1:
+        with col2:
             st.write("m1")
     else:
         st.write("Login to view the app")
