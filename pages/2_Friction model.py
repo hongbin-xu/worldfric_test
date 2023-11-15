@@ -137,7 +137,7 @@ try:
         data, distr_cont = dataLoad(_conn=conn)
 
         with st.sidebar:
-            modelOpt = st.selectbox("Select model:", ('m1', 'm2'))
+            #modelOpt = st.selectbox("Select model:", ('m1', 'm2'))
             with st.expander("DISTR"):
                 distOpt = st.multiselect("DISTR", distr_cont["DISTR"].unique(), 
                                         distr_cont["DISTR"].unique(), label_visibility="hidden")
