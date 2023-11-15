@@ -170,7 +170,7 @@ try:
                     plotData["SN"] = m1_v1(x[methodOpt][modelOpt], plotData)
                 if modelOpt == "m2":       
                     plotData["SN"] = m2_v1(x[methodOpt][modelOpt], plotData)
-
+        st.write(plotData)
         col1, col2, col3 = st.columns(3)
         with col1:
             with st.container():
