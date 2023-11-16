@@ -147,12 +147,6 @@ try:
             highOpt = st.multiselect("Facility", ("FM", "SH", "US", "IH"),("FM", "SH", "US", "IH"))
             pavOpt = st.multiselect("Pavement", ("AC_Thin", "AC_Thick", "COM", "JCP", "CRCP"), ("AC_Thin", "AC_Thick", "COM", "JCP", "CRCP"))
             data_v1 = data.loc[data["DISTR"].isin(distOpt)&data["CONT"].isin(contOpt)&data["HIGHWAY_FUN"].isin(highOpt)&data["PAV_TYPE"].isin(pavOpt)]
-        
-        st.write(data["AGE"].max())
-        st.write(data["PAV_TYPE"].unique())
-        st.write(data["HIGHWAY_FUN"].unique())
-
-        st.write(data_v1["AGE"].max())
 
         st.subheader("Stepwise")
         data_v1["pred1"] = m1(x["stepwise"]["m1"], data_v1)
