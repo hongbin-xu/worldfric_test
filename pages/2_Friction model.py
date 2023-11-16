@@ -148,7 +148,8 @@ try:
             pavOpt = st.multiselect("Pavement", ("AC_Thin", "AC_Thick", "COM", "JCP", "CRCP"), ("AC_Thin", "AC_Thick", "COM", "JCP", "CRCP"))
             data_v1 = data.loc[data["DISTR"].isin(distOpt)&data["CONT"].isin(contOpt)&data["HIGHWAY_FUN"].isin(highOpt)&data["PAV_TYPE"].isin(pavOpt)]
 
-        st.subheader("Stepwise")
+        # stepwise Model
+        st.subheader("I: Stepwise")
         data_v1["pred1"] = m1(x["stepwise"]["m1"], data_v1)
         data_v1["pred2"] = m2(x["stepwise"]["m2"], data_v1)
         col1, col2 = st.columns(2)
@@ -162,7 +163,8 @@ try:
             fig= px.box(plotData, x = "AGE", y = "SN", color= "pred vs. obs") 
             st.plotly_chart(fig,use_container_width=True, theme= None)
         
-        st.subheader("Stepwise with iteration")
+        # stepwise Model with iteration
+        st.subheader("II: Stepwise with iteration")
         data_v1["pred1"] = m1(x["step_iter"]["m1"], data_v1)
         data_v1["pred2"] = m2(x["step_iter"]["m2"], data_v1)
         col1, col2 = st.columns(2)
@@ -176,10 +178,12 @@ try:
             fig= px.box(plotData, x = "AGE", y = "SN", color= "pred vs. obs") 
             st.plotly_chart(fig,use_container_width=True, theme= None)
 
-        st.subheader("Remove facility type")
+        # Model with no facility type
+        st.subheader("III: Remove facility type")
         data_v1["pred1"] = m1_v1(x["remove_facility"]["m1"], data_v1)
         data_v1["pred2"] = m2_v1(x["remove_facility"]["m2"], data_v1)
         col1, col2 = st.columns(2)
+        
         with col1:
             plotData = pd.melt(data_v1.rename(columns ={"SN_cummin": "observed", "SN": "original"}), id_vars="AGE", value_vars=["observed", "pred1"], value_name="SN", var_name = "pred vs. obs")
             fig= px.box(plotData, x = "AGE", y = "SN", color= "pred vs. obs") 
