@@ -147,6 +147,12 @@ try:
             highOpt = st.multiselect("Facility", ("FM", "SH", "US", "IH"),("FM", "SH", "US", "IH"))
             pavOpt = st.multiselect("Pavement", ("AC_Thin", "AC_Thick", "AC_COM", "JCP", "CRCP"), ("AC_Thin", "AC_Thick", "AC_COM", "JCP", "CRCP"))
             data_v1 = data.loc[data["DISTR"].isin(distOpt)&data["CONT"].isin(contOpt)&data["HIGHWAY_FUN"].isin(highOpt)&data["PAV_TYPE"].isin(pavOpt)]
+        st.write(distOpt)
+        st.write(contOpt)
+        st.write(highOpt)
+        st.write(pavOpt)
+        st.write(data.loc[data["DISTR"]==13].groupby(by = "HIGHWAY_FUN").size())
+        st.write(data.loc[data["DISTR"]==13].groupby(by = "PAV_TYPE").size())
         st.write(data.loc[data["DISTR"]==13].groupby(by = "CONT").size())
         st.write(data_v1.head())
 
