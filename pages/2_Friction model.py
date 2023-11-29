@@ -145,7 +145,7 @@ try:
                                         distr_cont.loc[distr_cont["DISTR"].isin(distOpt)]["CONT"].values,
                                         label_visibility="hidden")
             highOpt = st.multiselect("Facility", ("FM", "SH", "US", "IH"),("FM", "SH", "US", "IH"))
-            pavOpt = st.multiselect("Pavement", ("AC_Thin", "AC_Thick", "COM", "JCP", "CRCP"), ("AC_Thin", "AC_Thick", "COM", "JCP", "CRCP"))
+            pavOpt = st.multiselect("Pavement", ("AC_Thin", "AC_Thick", "AC_COM", "JCP", "CRCP"), ("AC_Thin", "AC_Thick", "AC_COM", "JCP", "CRCP"))
             data_v1 = data.loc[data["DISTR"].isin(distOpt)&data["CONT"].isin(contOpt)&data["HIGHWAY_FUN"].isin(highOpt)&data["PAV_TYPE"].isin(pavOpt)]
 
         st.write(data_v1.head())
