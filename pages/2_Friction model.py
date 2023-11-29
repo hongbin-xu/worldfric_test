@@ -147,7 +147,7 @@ try:
             highOpt = st.multiselect("Facility", ("FM", "SH", "US", "IH"),("FM", "SH", "US", "IH"))
             pavOpt = st.multiselect("Pavement", ("AC_Thin", "AC_Thick", "AC_COM", "JCP", "CRCP"), ("AC_Thin", "AC_Thick", "AC_COM", "JCP", "CRCP"))
             data_v1 = data.loc[data["DISTR"].isin(distOpt)&data["CONT"].isin(contOpt)&data["HIGHWAY_FUN"].isin(highOpt)&data["PAV_TYPE"].isin(pavOpt)]
-        st.write(distOpt)
+        st.write(data.groupby(by = "DISTR").size())
         st.write(data_v1.head())
 
         # stepwise Model
