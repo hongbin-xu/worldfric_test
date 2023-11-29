@@ -148,6 +148,8 @@ try:
             pavOpt = st.multiselect("Pavement", ("AC_Thin", "AC_Thick", "COM", "JCP", "CRCP"), ("AC_Thin", "AC_Thick", "COM", "JCP", "CRCP"))
             data_v1 = data.loc[data["DISTR"].isin(distOpt)&data["CONT"].isin(contOpt)&data["HIGHWAY_FUN"].isin(highOpt)&data["PAV_TYPE"].isin(pavOpt)]
 
+        st.write(data_v1.head())
+
         # stepwise Model
         st.subheader("I: Stepwise")
         data_v1["pred1"] = m1(x["stepwise"]["m1"], data_v1)
