@@ -154,7 +154,7 @@ try:
         st.write(data.loc[data["DISTR"]==13].groupby(by = "HIGHWAY_FUN").size())
         st.write(data.loc[data["DISTR"]==13].groupby(by = "PAV_TYPE").size())
         st.write(data.loc[data["DISTR"]==13].groupby(by = "CONT").size())
-        st.write(data.loc[data["DISTR"].isin(distOpt)&data["CONT"].isin(contOpt)])#&data["HIGHWAY_FUN"].isin(highOpt)&data["PAV_TYPE"].isin(pavOpt)])
+        st.write(data.loc[data["DISTR"].isin(distOpt)&data["CONT"].isin(contOpt)&data["HIGHWAY_FUN"].isin(highOpt)])#&data["PAV_TYPE"].isin(pavOpt)])
 
         # stepwise Model
         st.subheader("I: Stepwise")
