@@ -109,11 +109,40 @@ def m2_v1(x,data):
     t0 = x[11]
     return a+b*np.exp(-c*(data["AGE"]-t0))   
 
+# with district effect
+def mdistrict(x1, x2, data, model = "m1", group_method = "a"):
+    if model == "m1":
+        a = x1[0] 
+        b = x1[1] + x1[2]*data["AC_Thick"]+x1[3]*data["COM"]+x1[4]*data["JCP"]+x1[5]*data["CRCP"]+ x1[6]*data["tavg"]+x1[7]*data["prcp"]+x1[8]*data["TRUCK_PCT"]
+        c = x1[9]+x1[10]*data["AADT"]   
+        dist = (x2[0]*data['AMA']+ x2[1]*data['AUS']+ x2[2]*data['BMT']+ 
+                x2[3]*data['BRY']+x2[4]*data['BWD']+x2[5]*data['CRP']+x2[6]*data['DAL']+x2[7]*data['HOU']+ 
+                x2[8]*data['LFK']+x2[9]*data['ODA']+x2[10]*data['PAR']+x2[11]*data['SAT'] +x2[12]*data['WFS']+ x2[13]*data['YKM'])
+        if group_method == "a":
+            a = a+dist
+        if group_method == "b":
+            b = b+dist
+        return a + b*np.exp(-c*data["AGE"])
+
+    if model == "m2":
+        a = x1[0] +x1[1]*data["TRUCK_PCT"]
+        b = x1[2] + x1[3]*data["AC_Thick"]+x1[4]*data["COM"]+x1[5]*data["JCP"]+x1[6]*data["CRCP"]+ x1[7]*data["tavg"]+x1[8]*data["prcp"]
+        c = x1[9]+x1[10]*data["AADT"]
+        t0 = x1[11]
+        dist = (x2[0]*data['AMA']+ x2[1]*data['AUS']+ x2[2]*data['BMT']+ 
+                x2[3]*data['BRY']+x2[4]*data['BWD']+x2[5]*data['CRP']+x2[6]*data['DAL']+x2[7]*data['HOU']+ 
+                x2[8]*data['LFK']+x2[9]*data['ODA']+x2[10]*data['PAR']+x2[11]*data['SAT'] +x2[12]*data['WFS']+ x2[13]*data['YKM'])
+        if group_method == "a":
+            a = a+dist
+        if group_method == "b":
+            b = b+dist
+        return a + b*np.exp(-c*(data["AGE"]-t0))   
+    
 #const TRUCK_PCT
 #const AC_Thick COM  JCP CRCP tavg prcp
 #const AADT
 #const
-x = {"stepwise":{"m1":np.array([7.049209e+00, -2.600203e+00, -8.963720e+00, -1.236767e+01,
+x1 = {"stepwise":{"m1":np.array([7.049209e+00, -2.600203e+00, -8.963720e+00, -1.236767e+01,
                                 2.090193e+02,-5.817576e+00, -9.876824e+00, -1.143599e+01, -8.430132e+00, -2.608191e+00, 1.906576e-01, 3.395223e-01,
                                 1.083621e-01, -1.374227e-07]),
                  "m2":np.array([1.184951e+01, -2.705696e+00, -9.117392e+00, -1.275260e+01, 3.073346e-01,
@@ -129,6 +158,44 @@ x = {"stepwise":{"m1":np.array([7.049209e+00, -2.600203e+00, -8.963720e+00, -1.2
                                  3.117803e-01])},           #34
      "remove_facility":{"m1":np.array([21.838598,244.464013,-10.340636,-17.486844,-22.654649,-14.556765,-3.339557,0.280081,-0.005669,0.179864,0.000003]), #4
                         "m2":np.array([15.455118,0.008352,216.724455,-9.174424,-15.323157,-19.658794,-12.895752,-2.870935,0.243233,0.124019,0.000002,0.276063])}} #2
+
+x = {"stepwise":{"m1":np.array([7.049209e+00, -2.600203e+00, -8.963720e+00, -1.236767e+01,
+                                2.090193e+02, -5.817576e+00, -9.876824e+00, -1.143599e+01,
+                                -8.430132e+00, -2.608191e+00,  1.906576e-01,  3.395223e-01,
+                                1.083621e-01, -1.374227e-07]),
+                 "m2":np.array([1.184951e+01, -2.705696e+00, -9.117392e+00, -1.275260e+01, 3.073346e-01,
+                                2.116791e+02, -6.001680e+00, -1.025022e+01, -1.183063e+01, -8.687251e+00,-2.709774e+00,1.973484e-01,
+                                1.345769e-01,-1.931186e-07,
+                                5.967551e-01])},
+    "step_iter":{"m1":np.array([7.049209e+00, -2.600203e+00, -8.963720e+00, -1.236767e+01,
+                            2.090193e+02,-5.817576e+00, -9.876824e+00, -1.143599e+01, -8.430132e+00, -2.608191e+00, 1.906576e-01, 3.395223e-01,
+                            1.083621e-01, -1.374227e-07]), #1
+                "m2":np.array([1.904065e+01, -2.780562e+00, -9.224207e+00, -1.299706e+01,
+                            3.126058e-01,  1.975575e+02, -5.801182e+00, -9.939388e+00,
+                            -1.147162e+01, -8.420724e+00, -2.633975e+00,  1.929804e-01,
+                            1.491272e-01, -3.103310e-08,  3.117803e-01])},           #34
+    "remove_facility":{"m1":np.array([2.74775611e+01,  1.87518114e+02, -5.99908654e+00, -1.24793455e+01,
+                                    -1.98010817e+01, -1.06650145e+01, -2.58736894e+00,  2.66982783e-01,
+                                    -8.24695544e-03, -3.02872924e-02,  9.07993449e-05]), #4
+                    "m2":np.array([1.54551180e+01,  8.35200000e-03,  2.16724455e+02, -9.17442400e+00,
+                                    -1.53231570e+01, -1.96587940e+01, -1.28957520e+01, -2.87093500e+00,
+                                    2.43233000e-01,  1.24019000e-01,  2.00000000e-06,  2.76063000e-01])}, 
+    'District-a': {'m1': np.array([ -9.34209793,  -0.19648616,   0.3731446 ,  -1.91602142,
+                            1.21794858,  -3.72421799, -14.99377031,   0.38054699,
+                            2.0343066 ,   0.98628697,   8.31692934,  -2.42262516,
+                            -3.05884358,  -4.30360067]),
+                'm2': np.array([-11.65252878,   1.89014777,   0.29063893,  -6.1818586 ,
+                            3.26602739,   1.12447323, -15.17340897,   3.51311267,
+                            3.45658544,  -1.65026649,   1.04489045,  -0.75967163,
+                            -9.58837323,  -1.2924821 ])},
+    'District-b': {'m1': np.array([ 8.55386115e+00, -1.20692454e+16, -3.12837524e+08, -1.70839702e+00,
+                                1.60902609e+00, -2.15732927e+05, -1.55273302e+18, -1.64231067e+13,
+                                -7.32758556e+00, -3.07578917e+03,  8.18061439e+02, -3.00884772e+10,
+                                4.32513456e+01, -1.58046292e+04]),
+                    'm2': np.array([-15.42510742,   2.54567803,   0.39888897,  -7.58160632,
+                                4.12393078,   0.98342646, -27.1920906 ,   6.90382704,
+                                4.19585498,  -2.43522073,   2.24347716,  -1.87753783,
+                                -11.40708527,  -1.71774125])}} #2
 
 try:
     if st.session_state["allow"]:
@@ -193,6 +260,39 @@ try:
             plotData = pd.melt(data_v1.rename(columns ={"SN_cummin": "observed", "SN": "original"}), id_vars="AGE", value_vars=["observed", "pred2"], value_name="SN", var_name = "pred vs. obs")
             fig= px.box(plotData, x = "AGE", y = "SN", color= "pred vs. obs") 
             st.plotly_chart(fig,use_container_width=True, theme= None)
+
+        # Model with no facility type with district effect
+        st.subheader("III: Remove facility type, with district effect on a")
+        data_v1["pred1"] = mdistrict(x["remove_facility"]["m1"], x["District-a"]["m1"], data_v1, model = "m1", group_method = "a")
+        data_v1["pred2"] = mdistrict(x["remove_facility"]["m2"], x["District-a"]["m2"], data_v1, model = "m2", group_method = "a")
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            plotData = pd.melt(data_v1.rename(columns ={"SN_cummin": "observed", "SN": "original"}), id_vars="AGE", value_vars=["observed", "pred1"], value_name="SN", var_name = "pred vs. obs")
+            fig= px.box(plotData, x = "AGE", y = "SN", color= "pred vs. obs") 
+            st.plotly_chart(fig,use_container_width=True, theme= None)        
+        
+        with col2:
+            plotData = pd.melt(data_v1.rename(columns ={"SN_cummin": "observed", "SN": "original"}), id_vars="AGE", value_vars=["observed", "pred2"], value_name="SN", var_name = "pred vs. obs")
+            fig= px.box(plotData, x = "AGE", y = "SN", color= "pred vs. obs") 
+            st.plotly_chart(fig,use_container_width=True, theme= None)
+        
+        # Model with no facility type with district effect
+        st.subheader("III: Remove facility type, with district effect on b")
+        data_v1["pred1"] = mdistrict(x["remove_facility"]["m1"], x["District-b"]["m1"], data_v1, model = "m1", group_method = "b")
+        data_v1["pred2"] = mdistrict(x["remove_facility"]["m2"], x["District-b"]["m2"], data_v1, model = "m2", group_method = "b")
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            plotData = pd.melt(data_v1.rename(columns ={"SN_cummin": "observed", "SN": "original"}), id_vars="AGE", value_vars=["observed", "pred1"], value_name="SN", var_name = "pred vs. obs")
+            fig= px.box(plotData, x = "AGE", y = "SN", color= "pred vs. obs") 
+            st.plotly_chart(fig,use_container_width=True, theme= None)        
+        
+        with col2:
+            plotData = pd.melt(data_v1.rename(columns ={"SN_cummin": "observed", "SN": "original"}), id_vars="AGE", value_vars=["observed", "pred2"], value_name="SN", var_name = "pred vs. obs")
+            fig= px.box(plotData, x = "AGE", y = "SN", color= "pred vs. obs") 
+            st.plotly_chart(fig,use_container_width=True, theme= None)
+        
     else:
         st.write("Login to view the app")
         st.session_state["allow"] = check_password()
