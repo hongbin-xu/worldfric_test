@@ -151,106 +151,107 @@ x = {"stepwise":{"m1":np.array([7.049209e+00, -2.600203e+00, -8.963720e+00, -1.2
                                     2.54567803])}
      } #2
 
+try:
+    if st.session_state["allow"]:
 
-if st.session_state["allow"]:
+        st.write("This section investigates the effect of different variables on the model prediction.")
 
-    st.write("This section investigates the effect of different variables on the model prediction.")
+        plotData = pd.DataFrame({"AGE": np.repeat(np.arange(0, 10, 0.5),21), 
+                                    "PAV_TYPE": (["AC_Thin", "AC_Thick", "COM", "JCP", "CRCP"]+["AC_Thick"]*16)*20, 
+                                    "HIGHWAY_FUN": (["FM"]*5+ ["FM", "SH", "US", "IH"]+ ["FM"]*12)*20, 
+                                    "AADT": ([5000]*9+[2000, 5000, 15000]+[5000]*9)*20, 
+                                    "TRUCK_PCT": ([15]*12+ [10, 15, 25]+[15]*6)*20, 
+                                    "tavg": ([67]*15+ [56, 67, 72]+[67]*3)*20, 
+                                    "prcp":([35]*18+[33,35,45])*20, 
+                                    "tag": (["PAV_TYPE"]*5 + ["HIGHWAY_FUN"]*4+["AADT"]*3+["TRUCK_PCT"]*3+["tavg"]*3+["prcp"]*3)*20}).sort_values(by = ["tag", "AGE"])
 
-    plotData = pd.DataFrame({"AGE": np.repeat(np.arange(0, 10, 0.5),21), 
-                                "PAV_TYPE": (["AC_Thin", "AC_Thick", "COM", "JCP", "CRCP"]+["AC_Thick"]*16)*20, 
-                                "HIGHWAY_FUN": (["FM"]*5+ ["FM", "SH", "US", "IH"]+ ["FM"]*12)*20, 
-                                "AADT": ([5000]*9+[2000, 5000, 15000]+[5000]*9)*20, 
-                                "TRUCK_PCT": ([15]*12+ [10, 15, 25]+[15]*6)*20, 
-                                "tavg": ([67]*15+ [56, 67, 72]+[67]*3)*20, 
-                                "prcp":([35]*18+[33,35,45])*20, 
-                                "tag": (["PAV_TYPE"]*5 + ["HIGHWAY_FUN"]*4+["AADT"]*3+["TRUCK_PCT"]*3+["tavg"]*3+["prcp"]*3)*20}).sort_values(by = ["tag", "AGE"])
+        plotData_v1 = pd.get_dummies(plotData[["PAV_TYPE", "HIGHWAY_FUN"]]).rename(columns={'PAV_TYPE_AC_Thick': "AC_Thick", 
+                                                                                            'PAV_TYPE_AC_Thin':"AC_Thin",
+                                                                                            'PAV_TYPE_COM': "COM",
+                                                                                            'PAV_TYPE_CRCP':"CRCP",
+                                                                                            'PAV_TYPE_JCP':"JCP", 
+                                                                                            'HIGHWAY_FUN_FM':"FM", 
+                                                                                            'HIGHWAY_FUN_IH':"IH",
+                                                                                            'HIGHWAY_FUN_SH':"SH", 
+                                                                                            'HIGHWAY_FUN_US':"US"})
+        plotData = pd.concat([plotData, plotData_v1], axis= 1)
 
-    plotData_v1 = pd.get_dummies(plotData[["PAV_TYPE", "HIGHWAY_FUN"]]).rename(columns={'PAV_TYPE_AC_Thick': "AC_Thick", 
-                                                                                        'PAV_TYPE_AC_Thin':"AC_Thin",
-                                                                                        'PAV_TYPE_COM': "COM",
-                                                                                        'PAV_TYPE_CRCP':"CRCP",
-                                                                                        'PAV_TYPE_JCP':"JCP", 
-                                                                                        'HIGHWAY_FUN_FM':"FM", 
-                                                                                        'HIGHWAY_FUN_IH':"IH",
-                                                                                        'HIGHWAY_FUN_SH':"SH", 
-                                                                                        'HIGHWAY_FUN_US':"US"})
-    plotData = pd.concat([plotData, plotData_v1], axis= 1)
+        with st.sidebar:
+            methodOpt = st.selectbox("Select approach:", ["stepwise", "step_iter", "remove_facility"])
+            modelOpt = st.selectbox("Select model:", ('m1', 'm2'))
+            # plot
+            if methodOpt !="remove_facility":
+                if modelOpt == "m1":
+                    plotData["SN"] = m1(x[methodOpt][modelOpt], plotData)
+                if modelOpt == "m2":       
+                    plotData["SN"] = m2(x[methodOpt][modelOpt], plotData)
+            else:
+                if modelOpt == "m1":
+                    plotData["SN"] = m1_v1(x[methodOpt][modelOpt], plotData)
+                if modelOpt == "m2":       
+                    plotData["SN"] = m2_v1(x[methodOpt][modelOpt], plotData)
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            with st.container():
+                st.write("Pavement Type")
+                fig = px.line(plotData.loc[plotData["tag"] == "PAV_TYPE"], 
+                                x = "AGE", 
+                                y = "SN", 
+                                color= "PAV_TYPE")
+                fig.update_layout(yaxis_range=[0,80])
+                st.plotly_chart(fig,use_container_width=True)
 
-    with st.sidebar:
-        methodOpt = st.selectbox("Select approach:", ["stepwise", "step_iter", "remove_facility"])
-        modelOpt = st.selectbox("Select model:", ('m1', 'm2'))
-        # plot
-        if methodOpt !="remove_facility":
-            if modelOpt == "m1":
-                plotData["SN"] = m1(x[methodOpt][modelOpt], plotData)
-            if modelOpt == "m2":       
-                plotData["SN"] = m2(x[methodOpt][modelOpt], plotData)
-        else:
-            if modelOpt == "m1":
-                plotData["SN"] = m1_v1(x[methodOpt][modelOpt], plotData)
-            if modelOpt == "m2":       
-                plotData["SN"] = m2_v1(x[methodOpt][modelOpt], plotData)
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        with st.container():
-            st.write("Pavement Type")
-            fig = px.line(plotData.loc[plotData["tag"] == "PAV_TYPE"], 
-                            x = "AGE", 
-                            y = "SN", 
-                            color= "PAV_TYPE")
-            fig.update_layout(yaxis_range=[0,80])
-            st.plotly_chart(fig,use_container_width=True)
+            with st.container():
+                st.write("Facility Type")
+                fig = px.line(plotData.loc[plotData["tag"] == "HIGHWAY_FUN"], 
+                                x = "AGE", 
+                                y = "SN", 
+                                color= "HIGHWAY_FUN")
+                fig.update_layout(yaxis_range=[0,80])
+                st.plotly_chart(fig,use_container_width=True)
 
-        with st.container():
-            st.write("Facility Type")
-            fig = px.line(plotData.loc[plotData["tag"] == "HIGHWAY_FUN"], 
-                            x = "AGE", 
-                            y = "SN", 
-                            color= "HIGHWAY_FUN")
-            fig.update_layout(yaxis_range=[0,80])
-            st.plotly_chart(fig,use_container_width=True)
-
-    with col2:
-        with st.container():
-            st.write("AADT")
-            fig = px.line(plotData.loc[plotData["tag"] == "AADT"], 
-                            x = "AGE", 
-                            y = "SN", 
-                            color= "AADT")
-            fig.update_layout(yaxis_range=[0,80])        
-            st.plotly_chart(fig,use_container_width=True)
+        with col2:
+            with st.container():
+                st.write("AADT")
+                fig = px.line(plotData.loc[plotData["tag"] == "AADT"], 
+                                x = "AGE", 
+                                y = "SN", 
+                                color= "AADT")
+                fig.update_layout(yaxis_range=[0,80])        
+                st.plotly_chart(fig,use_container_width=True)
 
 
-        with st.container():
-            st.write("Truck Percentage")
-            fig = px.line(plotData.loc[plotData["tag"] == "TRUCK_PCT"], 
-                            x = "AGE", 
-                            y = "SN", 
-                            color= "TRUCK_PCT")
-            fig.update_layout(yaxis_range=[0,80])        
-            st.plotly_chart(fig,use_container_width=True)
+            with st.container():
+                st.write("Truck Percentage")
+                fig = px.line(plotData.loc[plotData["tag"] == "TRUCK_PCT"], 
+                                x = "AGE", 
+                                y = "SN", 
+                                color= "TRUCK_PCT")
+                fig.update_layout(yaxis_range=[0,80])        
+                st.plotly_chart(fig,use_container_width=True)
 
-    with col3:
-        with st.container():
-            st.write("tavg")
-            fig = px.line(plotData.loc[plotData["tag"] == "tavg"], 
-                            x = "AGE", 
-                            y = "SN", 
-                            color= "tavg")
-            fig.update_layout(yaxis_range=[0,80])
-            
-            st.plotly_chart(fig,use_container_width=True)
+        with col3:
+            with st.container():
+                st.write("tavg")
+                fig = px.line(plotData.loc[plotData["tag"] == "tavg"], 
+                                x = "AGE", 
+                                y = "SN", 
+                                color= "tavg")
+                fig.update_layout(yaxis_range=[0,80])
+                
+                st.plotly_chart(fig,use_container_width=True)
 
-        with st.container():
-            st.write("Precipitation")
-            fig = px.line(plotData.loc[plotData["tag"] == "prcp"], 
-                            x = "AGE", 
-                            y = "SN", 
-                            color= "prcp")
-            fig.update_layout(yaxis_range=[0,80])
-            
-            st.plotly_chart(fig,use_container_width=True)        
-else:
-    st.write("Login to view the app")
-    st.session_state["allow"] = check_password()
-
+            with st.container():
+                st.write("Precipitation")
+                fig = px.line(plotData.loc[plotData["tag"] == "prcp"], 
+                                x = "AGE", 
+                                y = "SN", 
+                                color= "prcp")
+                fig.update_layout(yaxis_range=[0,80])
+                
+                st.plotly_chart(fig,use_container_width=True)        
+    else:
+        st.write("Login to view the app")
+        st.session_state["allow"] = check_password()
+except:
+    pass
