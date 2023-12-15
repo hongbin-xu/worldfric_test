@@ -199,106 +199,103 @@ x = {"stepwise":{"m1":np.array([7.049209e+00, -2.600203e+00, -8.963720e+00, -1.2
                                     2.54567803])}
      } #2
 
-try:
-    if st.session_state["allow"]:
-        # MySQL connection and load data
-        conn = st.connection("mysql", type="sql")
-        data, distr_cont = dataLoad(_conn=conn)
-        with st.sidebar:
-            #modelOpt = st.selectbox("Select model:", ('m1', 'm2'))
-            with st.expander("DISTR"):
-                distOpt = st.multiselect("DISTR", distr_cont["DISTR"].unique(), 
-                                        distr_cont["DISTR"].unique(), label_visibility="hidden")
-            with st.expander("CONT"):
-                contOpt = st.multiselect("CONT", distr_cont.loc[distr_cont["DISTR"].isin(distOpt)]["CONT"].values, 
-                                        distr_cont.loc[distr_cont["DISTR"].isin(distOpt)]["CONT"].values,
-                                        label_visibility="hidden")
-            highOpt = st.multiselect("Facility", ("FM", "SH", "US", "IH"),("FM", "SH", "US", "IH"))
-            pavOpt = st.multiselect("Pavement", ("AC_Thin", "AC_Thick", "AC_Com", "JCP", "CRCP"), ("AC_Thin", "AC_Thick", "AC_Com", "JCP", "CRCP"))
-            data_v1 = data.loc[data["DISTR"].isin(distOpt)&data["CONT"].isin(contOpt)&data["HIGHWAY_FUN"].isin(highOpt)&data["PAV_TYPE"].isin(pavOpt)]
 
-        # stepwise Model
-        st.subheader("I: Stepwise")
-        data_v1["pred1"] = m1(x["stepwise"]["m1"], data_v1)
-        data_v1["pred2"] = m2(x["stepwise"]["m2"], data_v1)
-        col1, col2 = st.columns(2)
-        with col1:
-            plotData = pd.melt(data_v1.rename(columns ={"SN_cummin": "observed", "SN": "original"}), id_vars="AGE", value_vars=["observed", "pred1"], value_name="SN", var_name = "pred vs. obs")
-            fig= px.box(plotData, x = "AGE", y = "SN", color= "pred vs. obs") 
-            st.plotly_chart(fig,use_container_width=True, theme= None)        
-        
-        with col2:
-            plotData = pd.melt(data_v1.rename(columns ={"SN_cummin": "observed", "SN": "original"}), id_vars="AGE", value_vars=["observed", "pred2"], value_name="SN", var_name = "pred vs. obs")
-            fig= px.box(plotData, x = "AGE", y = "SN", color= "pred vs. obs") 
-            st.plotly_chart(fig,use_container_width=True, theme= None)
-        
-        # stepwise Model with iteration
-        st.subheader("II: Stepwise with iteration")
-        data_v1["pred1"] = m1(x["step_iter"]["m1"], data_v1)
-        data_v1["pred2"] = m2(x["step_iter"]["m2"], data_v1)
-        col1, col2 = st.columns(2)
-        with col1:
-            plotData = pd.melt(data_v1.rename(columns ={"SN_cummin": "observed", "SN": "original"}), id_vars="AGE", value_vars=["observed", "pred1"], value_name="SN", var_name = "pred vs. obs")
-            fig= px.box(plotData, x = "AGE", y = "SN", color= "pred vs. obs") 
-            st.plotly_chart(fig,use_container_width=True, theme= None)        
-        
-        with col2:
-            plotData = pd.melt(data_v1.rename(columns ={"SN_cummin": "observed", "SN": "original"}), id_vars="AGE", value_vars=["observed", "pred2"], value_name="SN", var_name = "pred vs. obs")
-            fig= px.box(plotData, x = "AGE", y = "SN", color= "pred vs. obs") 
-            st.plotly_chart(fig,use_container_width=True, theme= None)
+if st.session_state["allow"]:
+    # MySQL connection and load data
+    conn = st.connection("mysql", type="sql")
+    data, distr_cont = dataLoad(_conn=conn)
+    with st.sidebar:
+        #modelOpt = st.selectbox("Select model:", ('m1', 'm2'))
+        with st.expander("DISTR"):
+            distOpt = st.multiselect("DISTR", distr_cont["DISTR"].unique(), 
+                                    distr_cont["DISTR"].unique(), label_visibility="hidden")
+        with st.expander("CONT"):
+            contOpt = st.multiselect("CONT", distr_cont.loc[distr_cont["DISTR"].isin(distOpt)]["CONT"].values, 
+                                    distr_cont.loc[distr_cont["DISTR"].isin(distOpt)]["CONT"].values,
+                                    label_visibility="hidden")
+        highOpt = st.multiselect("Facility", ("FM", "SH", "US", "IH"),("FM", "SH", "US", "IH"))
+        pavOpt = st.multiselect("Pavement", ("AC_Thin", "AC_Thick", "AC_Com", "JCP", "CRCP"), ("AC_Thin", "AC_Thick", "AC_Com", "JCP", "CRCP"))
+        data_v1 = data.loc[data["DISTR"].isin(distOpt)&data["CONT"].isin(contOpt)&data["HIGHWAY_FUN"].isin(highOpt)&data["PAV_TYPE"].isin(pavOpt)]
 
-        # Model with no facility type
-        st.subheader("III: Remove facility type")
-        data_v1["pred1"] = m1_v1(x["remove_facility"]["m1"], data_v1)
-        data_v1["pred2"] = m2_v1(x["remove_facility"]["m2"], data_v1)
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            plotData = pd.melt(data_v1.rename(columns ={"SN_cummin": "observed", "SN": "original"}), id_vars="AGE", value_vars=["observed", "pred1"], value_name="SN", var_name = "pred vs. obs")
-            fig= px.box(plotData, x = "AGE", y = "SN", color= "pred vs. obs") 
-            st.plotly_chart(fig,use_container_width=True, theme= None)        
-        
-        with col2:
-            plotData = pd.melt(data_v1.rename(columns ={"SN_cummin": "observed", "SN": "original"}), id_vars="AGE", value_vars=["observed", "pred2"], value_name="SN", var_name = "pred vs. obs")
-            fig= px.box(plotData, x = "AGE", y = "SN", color= "pred vs. obs") 
-            st.plotly_chart(fig,use_container_width=True, theme= None)
+    # stepwise Model
+    st.subheader("I: Stepwise")
+    data_v1["pred1"] = m1(x["stepwise"]["m1"], data_v1)
+    data_v1["pred2"] = m2(x["stepwise"]["m2"], data_v1)
+    col1, col2 = st.columns(2)
+    with col1:
+        plotData = pd.melt(data_v1.rename(columns ={"SN_cummin": "observed", "SN": "original"}), id_vars="AGE", value_vars=["observed", "pred1"], value_name="SN", var_name = "pred vs. obs")
+        fig= px.box(plotData, x = "AGE", y = "SN", color= "pred vs. obs") 
+        st.plotly_chart(fig,use_container_width=True, theme= None)        
+    
+    with col2:
+        plotData = pd.melt(data_v1.rename(columns ={"SN_cummin": "observed", "SN": "original"}), id_vars="AGE", value_vars=["observed", "pred2"], value_name="SN", var_name = "pred vs. obs")
+        fig= px.box(plotData, x = "AGE", y = "SN", color= "pred vs. obs") 
+        st.plotly_chart(fig,use_container_width=True, theme= None)
+    
+    # stepwise Model with iteration
+    st.subheader("II: Stepwise with iteration")
+    data_v1["pred1"] = m1(x["step_iter"]["m1"], data_v1)
+    data_v1["pred2"] = m2(x["step_iter"]["m2"], data_v1)
+    col1, col2 = st.columns(2)
+    with col1:
+        plotData = pd.melt(data_v1.rename(columns ={"SN_cummin": "observed", "SN": "original"}), id_vars="AGE", value_vars=["observed", "pred1"], value_name="SN", var_name = "pred vs. obs")
+        fig= px.box(plotData, x = "AGE", y = "SN", color= "pred vs. obs") 
+        st.plotly_chart(fig,use_container_width=True, theme= None)        
+    
+    with col2:
+        plotData = pd.melt(data_v1.rename(columns ={"SN_cummin": "observed", "SN": "original"}), id_vars="AGE", value_vars=["observed", "pred2"], value_name="SN", var_name = "pred vs. obs")
+        fig= px.box(plotData, x = "AGE", y = "SN", color= "pred vs. obs") 
+        st.plotly_chart(fig,use_container_width=True, theme= None)
 
-        # Model with no facility type with district effect
-        st.subheader("III: Remove facility type, with district effect on a")
-        data_v1["pred1"] = mdistrict(x["remove_facility"]["m1"], x["District-a"]["m1"], data_v1, model = "m1", group_method = "a")
-        data_v1["pred2"] = mdistrict(x["remove_facility"]["m2"], x["District-a"]["m2"], data_v1, model = "m2", group_method = "a")
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            plotData = pd.melt(data_v1.rename(columns ={"SN_cummin": "observed", "SN": "original"}), id_vars="AGE", value_vars=["observed", "pred1"], value_name="SN", var_name = "pred vs. obs")
-            fig= px.box(plotData, x = "AGE", y = "SN", color= "pred vs. obs") 
-            st.plotly_chart(fig,use_container_width=True, theme= None)        
-        
-        with col2:
-            plotData = pd.melt(data_v1.rename(columns ={"SN_cummin": "observed", "SN": "original"}), id_vars="AGE", value_vars=["observed", "pred2"], value_name="SN", var_name = "pred vs. obs")
-            fig= px.box(plotData, x = "AGE", y = "SN", color= "pred vs. obs") 
-            st.plotly_chart(fig,use_container_width=True, theme= None)
-        
-        # Model with no facility type with district effect
-        st.subheader("III: Remove facility type, with district effect on b")
-        data_v1["pred1"] = mdistrict(x["remove_facility"]["m1"], x["District-b"]["m1"], data_v1, model = "m1", group_method = "b")
-        data_v1["pred2"] = mdistrict(x["remove_facility"]["m2"], x["District-b"]["m2"], data_v1, model = "m2", group_method = "b")
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            plotData = pd.melt(data_v1.rename(columns ={"SN_cummin": "observed", "SN": "original"}), id_vars="AGE", value_vars=["observed", "pred1"], value_name="SN", var_name = "pred vs. obs")
-            fig= px.box(plotData, x = "AGE", y = "SN", color= "pred vs. obs") 
-            st.plotly_chart(fig,use_container_width=True, theme= None)        
-        
-        with col2:
-            plotData = pd.melt(data_v1.rename(columns ={"SN_cummin": "observed", "SN": "original"}), id_vars="AGE", value_vars=["observed", "pred2"], value_name="SN", var_name = "pred vs. obs")
-            fig= px.box(plotData, x = "AGE", y = "SN", color= "pred vs. obs") 
-            st.plotly_chart(fig,use_container_width=True, theme= None)
-        
-    else:
-        st.write("Login to view the app")
-        st.session_state["allow"] = check_password()
-except:
+    # Model with no facility type
+    st.subheader("III: Remove facility type")
+    data_v1["pred1"] = m1_v1(x["remove_facility"]["m1"], data_v1)
+    data_v1["pred2"] = m2_v1(x["remove_facility"]["m2"], data_v1)
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        plotData = pd.melt(data_v1.rename(columns ={"SN_cummin": "observed", "SN": "original"}), id_vars="AGE", value_vars=["observed", "pred1"], value_name="SN", var_name = "pred vs. obs")
+        fig= px.box(plotData, x = "AGE", y = "SN", color= "pred vs. obs") 
+        st.plotly_chart(fig,use_container_width=True, theme= None)        
+    
+    with col2:
+        plotData = pd.melt(data_v1.rename(columns ={"SN_cummin": "observed", "SN": "original"}), id_vars="AGE", value_vars=["observed", "pred2"], value_name="SN", var_name = "pred vs. obs")
+        fig= px.box(plotData, x = "AGE", y = "SN", color= "pred vs. obs") 
+        st.plotly_chart(fig,use_container_width=True, theme= None)
+
+    # Model with no facility type with district effect
+    st.subheader("III: Remove facility type, with district effect on a")
+    data_v1["pred1"] = mdistrict(x["remove_facility"]["m1"], x["District-a"]["m1"], data_v1, model = "m1", group_method = "a")
+    data_v1["pred2"] = mdistrict(x["remove_facility"]["m2"], x["District-a"]["m2"], data_v1, model = "m2", group_method = "a")
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        plotData = pd.melt(data_v1.rename(columns ={"SN_cummin": "observed", "SN": "original"}), id_vars="AGE", value_vars=["observed", "pred1"], value_name="SN", var_name = "pred vs. obs")
+        fig= px.box(plotData, x = "AGE", y = "SN", color= "pred vs. obs") 
+        st.plotly_chart(fig,use_container_width=True, theme= None)        
+    
+    with col2:
+        plotData = pd.melt(data_v1.rename(columns ={"SN_cummin": "observed", "SN": "original"}), id_vars="AGE", value_vars=["observed", "pred2"], value_name="SN", var_name = "pred vs. obs")
+        fig= px.box(plotData, x = "AGE", y = "SN", color= "pred vs. obs") 
+        st.plotly_chart(fig,use_container_width=True, theme= None)
+    
+    # Model with no facility type with district effect
+    st.subheader("III: Remove facility type, with district effect on b")
+    data_v1["pred1"] = mdistrict(x["remove_facility"]["m1"], x["District-b"]["m1"], data_v1, model = "m1", group_method = "b")
+    data_v1["pred2"] = mdistrict(x["remove_facility"]["m2"], x["District-b"]["m2"], data_v1, model = "m2", group_method = "b")
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        plotData = pd.melt(data_v1.rename(columns ={"SN_cummin": "observed", "SN": "original"}), id_vars="AGE", value_vars=["observed", "pred1"], value_name="SN", var_name = "pred vs. obs")
+        fig= px.box(plotData, x = "AGE", y = "SN", color= "pred vs. obs") 
+        st.plotly_chart(fig,use_container_width=True, theme= None)        
+    
+    with col2:
+        plotData = pd.melt(data_v1.rename(columns ={"SN_cummin": "observed", "SN": "original"}), id_vars="AGE", value_vars=["observed", "pred2"], value_name="SN", var_name = "pred vs. obs")
+        fig= px.box(plotData, x = "AGE", y = "SN", color= "pred vs. obs") 
+        st.plotly_chart(fig,use_container_width=True, theme= None)
+    
+else:
     st.write("Login to view the app")
     st.session_state["allow"] = check_password()
-        
+
