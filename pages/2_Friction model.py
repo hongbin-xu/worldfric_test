@@ -61,7 +61,7 @@ def dataLoad(_conn):
     mode2: select for multiple segment
     creating 2d array of the height measurement
     """
-    data = conn.query('SELECT * from fricPAwh;') 
+    data = conn.query('SELECT * from fric;') 
     distr_cont = conn.query('SELECT * from distr_cont_onlineApp;') 
     return data, distr_cont
 
