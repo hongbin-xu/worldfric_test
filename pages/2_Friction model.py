@@ -265,7 +265,6 @@ if st.session_state["allow"]:
 
     # Model with no facility type with district effect
     st.subheader("III: Remove facility type, with district effect on a")
-    st.write(data_v1.columns)
     data_v1["pred1"] = mdistrict(x["remove_facility"]["m1"], x["District-a"]["m1"], data_v1, model = "m1", group_method = "a")
     data_v1["pred2"] = mdistrict(x["remove_facility"]["m2"], x["District-a"]["m2"], data_v1, model = "m2", group_method = "a")
     col1, col2 = st.columns(2)
